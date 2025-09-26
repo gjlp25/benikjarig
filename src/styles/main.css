@@ -1,0 +1,384 @@
+:root {
+  --cherry-blossom: #e8aeb7;
+  --uranian-blue: #b8e1ff;
+  --ice-blue: #a9fff7;
+  --light-green: #94fbab;
+  --cambridge-blue: #82aba1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--uranian-blue) 0%, var(--ice-blue) 50%, var(--light-green) 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  display: grid; /* center the main column horizontally */
+  grid-template-rows: 1fr auto;
+  place-items: start center; /* top alignment vertically, centered horizontally */
+  padding: 1rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Page wrapper: constrain main content and keep natural document flow */
+main {
+  width: 100%;
+  max-width: 500px; /* same as .container */
+  margin: 0 auto;
+  justify-self: center; /* ensure main centers inside body grid */
+  padding-bottom: 0; /* footer inserted after main; no extra reserve needed */
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 1.5rem; /* reduced space between stacked containers (24px) */
+}
+
+.container-root {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Headings */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0f172a; /* solid color for strong contrast */
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #0f172a; /* increased contrast for accessibility */
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--cherry-blossom);
+  box-shadow: 0 0 0 3px rgba(232, 174, 183, 0.1);
+  background: white;
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, var(--cherry-blossom) 0%, var(--cambridge-blue) 100%);
+  color: #ffffff; /* white text for reliable contrast on gradient */
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(232, 174, 183, 0.3);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(232, 174, 183, 0.4);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Result card */
+.result {
+  margin-top: 0; /* spacing is handled by #modal-root; avoid double gap */
+  padding: 2rem;
+  padding-top: calc(2rem + 6px); /* space for decorative bar */
+  border-radius: 16px;
+  animation: fadeIn 0.5s ease;
+  background: #ffffff;
+  color: #0f172a; /* strong dark text for WCAG contrast */
+  box-shadow: 0 8px 30px rgba(16, 24, 40, 0.06);
+  position: relative; /* allows decorative bar to be absolutely positioned inside */
+}
+
+.result.birthday {
+  /* keep a subtle accent while ensuring high contrast */
+  background: linear-gradient(180deg, #ffffff 0%, rgba(232,174,183,0.06) 100%);
+  color: #0f172a;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(16,24,40,0.06);
+}
+
+.result.not-birthday {
+  background: linear-gradient(180deg, #ffffff 0%, rgba(130,171,161,0.06) 100%);
+  color: #0f172a;
+  border: 1px solid rgba(16,24,40,0.04);
+}
+
+.result h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #0b1220;
+}
+
+.result p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  color: #0f172a;
+}
+
+/* Share buttons */
+.share-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.share-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.share-btn:hover {
+  transform: translateY(-1px);
+}
+
+.whatsapp { background: #25d366; color: white; }
+.facebook { background: #1877f2; color: white; }
+.twitter { background: #1da1f2; color: white; }
+.linkedin { background: #0077b5; color: white; }
+
+/* Leap year message & age */
+.leap-year-message {
+  background: linear-gradient(135deg, var(--light-green), var(--ice-blue));
+  color: #0f172a; /* stronger contrast for accessibility */
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-top: 1rem;
+}
+
+.age-display {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  opacity: 0.9;
+}
+
+/* Visual accent for result cards - decorative only, preserves WCAG contrast of content */
+.result::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(90deg, var(--cherry-blossom), var(--uranian-blue));
+  opacity: 0.95;
+}
+
+/* Per-state accent overrides (stronger color but decorative only) */
+.result.birthday::before {
+  background: linear-gradient(90deg, var(--cherry-blossom), rgba(232,174,183,0.9));
+}
+.result.not-birthday::before {
+  background: linear-gradient(90deg, var(--cambridge-blue), rgba(130,171,161,0.9));
+}
+
+/* Decorative footer inside the container (aria-hidden) to preserve the original look */
+.footer-visual {
+  margin-top: 1.25rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.92);
+  color: #0f172a; /* increased contrast */
+  font-size: 0.9rem;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+}
+
+/* Real, accessible footer (contentinfo) — visually subtle, placed at document level */
+.site-footer {
+  width: 100%;
+  padding: 1rem;
+  background: transparent;
+  color: #0f172a; /* increased contrast */
+  font-size: 0.9rem;
+  text-align: center;
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+
+/* Subtle muted text but with improved contrast */
+.muted {
+  color: #374151;
+}
+
+/* Make sure footer links are clear and keyboard-visible */
+.site-footer a,
+.footer-visual a {
+  color: #0b1220;
+  text-decoration: underline;
+}
+
+/* Utility */
+.hidden { display: none !important; }
+
+/* Fade-in animation (kept here; keyframes file will include heavier animations) */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  h1 { font-size: 2rem; }
+  .container { padding: 1.5rem; margin: 0.5rem; }
+  .result h2 { font-size: 1.6rem; }
+  .share-buttons { gap: 0.5rem; }
+  .share-btn { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+}
+
+/* Modal/result placement: keep results in normal document flow so they stack under the form.
+   This ensures consistent width with .container and prevents overlap/covering of the footer. */
+#modal-root.hidden { display: none; }
+
+#modal-root {
+  display: block;
+  width: 100%;
+  max-width: 500px; /* same as .container */
+  margin: 1.5rem auto 3rem; /* 24px gap from the form, 48px before footer */
+  padding: 0;
+}
+
+/* Support both cases: when .result is rendered inside #modal-root, or when #modal-root itself gets the .result class */
+#modal-root > .result,
+#modal-root > .leap-year-message,
+#modal-root.result,
+#modal-root.leap-year-message {
+  width: 100%;
+  max-width: 500px;
+  margin: 0;
+  position: static; /* ensure in-flow */
+  padding: 2rem;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  z-index: 1; /* stay below footer if footer needs to overlap */
+}
+
+/* Footer sanity: keep footer in the normal flow so it doesn't cover content.
+   If you prefer a fixed footer, add padding-bottom on main equal to footer height. */
+.site-footer {
+  position: static;
+  margin-top: 2rem; /* 32px gap above footer */
+  padding: 16px 0;   /* comfortable vertical padding */
+  z-index: 2;
+}
+
+/* Ensure result content stacks vertically and is center-aligned horizontally.
+   Apply to both modal-root variants and the in-container #result fallback. */
+#modal-root,
+#modal-root.result,
+#modal-root > .result,
+#modal-root > .leap-year-message,
+#result,
+.result,
+.leap-year-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center horizontally */
+  text-align: center;  /* center inline text */
+  gap: 0.75rem;
+}
+
+/* Share buttons: horizontal row, constrained width, placed at the bottom of the box.
+   Using margin-top: auto will push the buttons to the bottom in flex layouts. */
+#result .share-buttons,
+.result .share-buttons,
+#modal-root .share-buttons,
+#modal-root > .share-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+  justify-content: center; /* center horizontally; change to flex-start to left-align */
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* If you want the share buttons to always sit at the visual bottom of the white container,
+   enable the rule below. It will take effect when the container has extra vertical space. */
+#result .share-buttons,
+.result .share-buttons {
+  margin-top: auto;
+}
+
+/* Ensure footer stays visually below overlay */
+.site-footer { position: relative; z-index: 1; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,158 @@
+# .clinerules — benikvandaagjarig.nl
+
+## 🔎 Documentatie & context
+- **Lees altijd `projectbrief.md`** bij start van een taak.
+- **Check `progress.md`** voor status. Voeg nieuwe taken toe met datum als ze ontbreken.
+- Houd je aan de **architectuur, naamgeving en structuur** uit `projectbrief.md`.
+- **Design foundation**: gebruik `index.html` als basis voor UI/UX implementatie.
+
+## 🧱 Stack & projectstandaarden
+- **Framework:** **Vanilla JS/HTML + Vite** + **TypeScript (strict)**.
+- **Styling:** **Modern CSS met custom properties**.
+- **Animatie:** CSS keyframes (performance-first), `canvas-confetti` (lazy load).
+- **Hosting:** Vercel.
+- **Taal site:** **Nederlands** (copy, UI, aria-labels).
+- **Geen PII**: geboortedata **niet opslaan**; log alleen events zonder persoonsgegevens.
+
+## 🗂️ Code-structuur & modulariteit
+- Houd bestanden **< 300 regels** waar mogelijk (max **500**). Split logisch op in modules.
+- Mappen:
+  ```
+  src/
+  ├── index.html          # Main entry point
+  ├── styles/
+  │   ├── main.css        # Core styles, custom properties
+  │   └── animations.css  # Balloons, confetti, transitions
+  ├── scripts/
+  │   ├── birthday-logic.ts  # Date calculation, validation
+  │   ├── animations.ts      # Confetti, balloons, celebrations  
+  │   ├── sharing.ts         # Social media integration
+  │   └── main.ts           # App initialization
+  └── utils/
+      ├── date-helpers.ts   # Date utilities, leap year logic
+      └── dom-helpers.ts    # DOM manipulation helpers
+  ```
+- **Consistente imports** (ES modules) en duidelijke function interfaces met TypeScript.
+
+## 🧪 Testen & betrouwbaarheid
+- **Unit tests:** Vitest voor logica (date calculations, validation).
+- **E2E:** Playwright voor user flows.
+- **Toegankelijkheid:** `axe-core` voor critical flows.
+- **Targets per feature:**
+  - 1 "happy path" (vandaag jarig)
+  - 1 edge case (29-02 schrikkeljaar)
+  - 1 failure/invalid input
+- Testen staan in `tests/` met spiegelende structuur.
+
+## 🎯 UX/A11y/Performance (niet-onderhandelbaar)
+- **Accessibility:**
+  - Respecteer `prefers-reduced-motion`; disable/verminder confetti/ballonnen.
+  - Semantische HTML, focus states, labels/aria, contrast **AA**.
+  - Volledig toetsenbordbedienbaar.
+  - Screen reader support voor alle interacties.
+- **Performance budget:**
+  - **Totale bundle ≤ 50KB gz** (vanilla voordeel).
+  - Confetti **dynamic import** alleen bij "jarig".
+  - System fonts first, custom fonts alleen met `display=swap`.
+  - Lazy load non-critical assets.
+- **Lighthouse**: ≥ 95 op Performance, Accessibility, Best Practices, SEO (in CI meten).
+
+## 🔐 Security & privacy (GDPR)
+- **Headers** (via `vercel.json` config):
+  - HSTS (na live HTTPS): `max-age=31536000; includeSubDomains; preload`
+  - CSP **strak**; alleen origins whitelisten die écht nodig zijn (analytics/ads pas na consent).
+  - `X-Content-Type-Options: nosniff`
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+  - `Permissions-Policy`: alles uit behalve wat nodig is
+  - `X-Frame-Options: DENY`
+- **Consent** verplicht vóór laden van analytics/ads.
+- **Analytics:** Plausible/Umami (cookieloos). Geen geboortedata wegschrijven. Alleen boolean/event-telemetrie.
+
+## 📣 Social sharing
+- **Web Share API** eerst; fallback naar platform-URL's (WhatsApp, Facebook, X, LinkedIn).
+- **Dynamische OG-images** via serverless function of static variants.
+- **Share teksten** (uit `projectbrief.md`):
+  - Jarig: "🎉 Ik ben vandaag jarig! Check het zelf op benikvandaagjarig.nl"
+  - Niet jarig: "Nee, ik ben niet jarig… Ben jij het wel? 👉 benikvandaagjarig.nl"
+
+## 🎨 Design system (van index.html prototype)
+- **Kleuren** (CSS custom properties):
+  ```css
+  :root {
+    --cherry-blossom: #e8aeb7;
+    --uranian-blue: #b8e1ff;
+    --ice-blue: #a9fff7;
+    --light-green: #94fbab;
+    --cambridge-blue: #82aba1;
+  }
+  ```
+- **Typography**: System font stack voor snelheid
+- **Spacing**: Consistent met rem/em units
+- **Animations**: GPU-accelerated, respecteer reduced-motion
+- **Components**: Glassmorphism containers, gradient buttons
+
+## 🚀 Development workflow
+- **Lokaal draaien**: `npm run dev` (Vite dev server)
+- **Build**: `npm run build` (optimized production build)
+- **Preview**: `npm run preview` (test production build)
+- **Deploy**: Vercel auto-deploy op main branch
+- **Linting**: ESLint + Prettier voor code quality
+
+## 📊 Monitoring & analytics
+- **Core Web Vitals**: Monitor in productie
+- **Usage tracking**: 
+  - Form submissions (zonder data)
+  - Birthday vs not-birthday ratio
+  - Share button clicks
+  - Browser/device stats
+- **Error tracking**: Console errors, failed interactions
+
+## 🎯 Specifieke implementatie-eisen
+- **Date logic**: Client-side only, geen server calls
+- **Leap year**: Speciale melding voor 29-02 in non-leap years
+- **Age calculation**: Toon leeftijd bij resultaat
+- **Sound effects**: Alleen na user interaction (autoplay policy)
+- **Confetti**: Canvas-based, performance-optimized
+- **Balloons**: CSS-only animaties, hardware-accelerated
+
+## 🔧 Build & deploy configuratie
+```json
+// package.json scripts
+{
+  "dev": "vite",
+  "build": "tsc && vite build",
+  "preview": "vite preview",
+  "test": "vitest",
+  "test:e2e": "playwright test",
+  "lint": "eslint src --ext .ts,.js",
+  "type-check": "tsc --noEmit"
+}
+```
+
+## 🐛 Error handling & fallbacks
+- **Invalid dates**: Duidelijke Nederlandse foutmeldingen
+- **Confetti failure**: Graceful fallback zonder crash
+- **Share API failure**: Automatisch fallback naar URLs
+- **Analytics failure**: Geen impact op core functionality
+- **Font loading failure**: System fonts als backup
+
+## 🎉 Celebratie features (uit prototype)
+- **Jarig**: Confetti + ballonnen + geluid + "Gefeliciteerd!"
+- **Niet jarig**: Speelse "Aan het werk!" boodschap
+- **Schrikkeljaar**: Custom melding voor 29-02
+- **Age display**: Altijd leeftijd tonen
+- **Share prompts**: Context-specifieke teksten
+
+## 🔍 Testing scenarios
+1. **Vandaag jarig**: Volledige celebratie flow
+2. **Niet jarig**: Standard flow + share buttons  
+3. **29 februari non-leap**: Speciale melding
+4. **Invalide datum**: Error handling
+5. **Keyboard navigation**: Volledige a11y flow
+6. **Reduced motion**: Animaties uit/verminderd
+7. **Mobile/desktop**: Responsive gedrag
+8. **Share functionality**: Alle platforms
+
+---
+
+**Onthoud:** De `index.html` prototype bevat alle core functionaliteit. Gebruik dit als leidraad voor de productie-implementatie, behoud alle UX details en celebratie-effecten!

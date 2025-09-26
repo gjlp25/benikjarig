@@ -1,0 +1,52 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - heading [level=1] [ref=e5]: 🎂 Ben ik vandaag jarig?
+      - paragraph [ref=e6]: Voer je geboortedatum in en ontdek het!
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]: Dag
+          - spinbutton [ref=e10]: "18"
+        - generic [ref=e11]:
+          - generic [ref=e12]: Maand
+          - spinbutton [ref=e13]: "9"
+        - generic [ref=e14]:
+          - generic [ref=e15]: Jaar
+          - spinbutton [ref=e16]: "2000"
+        - button [ref=e17] [cursor=pointer]: 🔄 Opnieuw checken
+  - dialog "🎉 GEFELICITEERD!" [ref=e18]:
+    - heading "🎉 GEFELICITEERD!" [active] [level=2] [ref=e19]
+    - paragraph [ref=e20]: Ja! Je bent vandaag 25 jaar geworden!
+    - paragraph [ref=e21]: 🎂 Proficiat met je verjaardag! 🎈
+    - generic [ref=e22]: Happy Birthday! 🎊
+    - generic [ref=e23]:
+      - link "📱 WhatsApp" [ref=e24] [cursor=pointer]:
+        - /url: https://wa.me/?text=%F0%9F%8E%89%20Ik%20ben%20vandaag%20jarig!%20Check%20het%20zelf%20op%20benikvandaagjarig.nl%20https%3A%2F%2Fbenikvandaagjarig.nl%2F%3Fr%3Dbday
+      - link "📘 Facebook" [ref=e25] [cursor=pointer]:
+        - /url: https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fbenikvandaagjarig.nl%2F%3Fr%3Dbday
+      - link "🐦 X (Twitter)" [ref=e26] [cursor=pointer]:
+        - /url: https://twitter.com/intent/tweet?text=%F0%9F%8E%89%20Ik%20ben%20vandaag%20jarig!%20Check%20het%20zelf%20op%20benikvandaagjarig.nl&url=https%3A%2F%2Fbenikvandaagjarig.nl%2F%3Fr%3Dbday
+      - link "💼 LinkedIn" [ref=e27] [cursor=pointer]:
+        - /url: https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbenikvandaagjarig.nl%2F%3Fr%3Dbday
+  - contentinfo [ref=e28]:
+    - generic [ref=e29]:
+      - paragraph [ref=e30]:
+        - text: © 2025 benikvandaagjarig.nl
+        - text: Gemaakt door [jouw naam/alias]
+        - text: "Contact: info@benikvandaagjarig.nl"
+      - paragraph [ref=e31]:
+        - text: "Laatste update: september 2025"
+        - link "Privacyverklaring" [ref=e32] [cursor=pointer]:
+          - /url: /privacy.html
+  - dialog "Wij gebruiken analytics om anonieme gebruiksstatistieken te verzamelen. Accepteer je analytics?" [ref=e33]:
+    - generic [ref=e34]: Wij gebruiken analytics om anonieme gebruiksstatistieken te verzamelen. Accepteer je analytics?
+    - generic [ref=e35]:
+      - button "Accepteer" [ref=e36] [cursor=pointer]
+      - button "Weiger" [ref=e37] [cursor=pointer]
+    - link "Lees meer over privacy en analytics" [ref=e38] [cursor=pointer]:
+      - /url: /privacy.html
+      - text: Privacy
+```
