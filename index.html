@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="nl" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ben ik vandaag jarig?</title>
+    <meta name="description" content="Ontdek of je vandaag jarig bent! Een leuke gimmick website om te checken of het jouw verjaardag is.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Ben ik vandaag jarig?">
+    <meta property="og:description" content="Ontdek of je vandaag jarig bent! Een leuke gimmick website om te checken of het jouw verjaardag is.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://benikvandaagjarig.nl">
+    <meta property="og:image" content="/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ben ik vandaag jarig?">
+    <meta name="twitter:description" content="Ontdek of je vandaag jarig bent!">
+    <meta name="twitter:image" content="/og-image.jpg">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Confetti Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.2/confetti.min.js" integrity="sha512-DJa2wGKON0v6IqGdSvOagWxe8zfcwNnX7xOJ6NrCBBP/2nqkx6FNNwqjV3sJqDu6gHDbCZOSNv+9p5WQZb7bBQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        :root {
+            --cherry-blossom: #e8aeb7;
+            --uranian-blue: #b8e1ff;
+            --ice-blue: #a9fff7;
+            --light-green: #94fbab;
+            --cambridge-blue: #82aba1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--uranian-blue) 0%, var(--ice-blue) 50%, var(--light-green) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--cherry-blossom), var(--cambridge-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--cherry-blossom);
+            box-shadow: 0 0 0 3px rgba(232, 174, 183, 0.1);
+            background: white;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--cherry-blossom) 0%, var(--cambridge-blue) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(232, 174, 183, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(232, 174, 183, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 2rem;
+            padding: 2rem;
+            border-radius: 16px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result.birthday {
+            background: linear-gradient(135deg, var(--cherry-blossom), var(--uranian-blue));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result.not-birthday {
+            background: linear-gradient(135deg, var(--cambridge-blue), var(--ice-blue));
+            color: #2d3748;
+        }
+        
+        .result h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .result p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .share-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .whatsapp { background: #25d366; color: white; }
+        .facebook { background: #1877f2; color: white; }
+        .twitter { background: #1da1f2; color: white; }
+        .linkedin { background: #0077b5; color: white; }
+        
+        .balloon {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0.8;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .balloon:nth-child(1) {
+            background: var(--cherry-blossom);
+            left: 10%;
+            animation-delay: -1s;
+        }
+        
+        .balloon:nth-child(2) {
+            background: var(--uranian-blue);
+            left: 30%;
+            animation-delay: -2s;
+        }
+        
+        .balloon:nth-child(3) {
+            background: var(--ice-blue);
+            right: 30%;
+            animation-delay: -3s;
+        }
+        
+        .balloon:nth-child(4) {
+            background: var(--light-green);
+            right: 10%;
+            animation-delay: -4s;
+        }
+        
+        .leap-year-message {
+            background: linear-gradient(135deg, var(--light-green), var(--ice-blue));
+            color: #2d3748;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+        
+        .age-display {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            opacity: 0.9;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .bounce {
+            animation: bounce 1s ease infinite;
+        }
+        
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            .container { padding: 1.5rem; margin: 0.5rem; }
+            .result h2 { font-size: 1.6rem; }
+            .share-buttons { gap: 0.5rem; }
+            .share-btn { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎂 Ben ik vandaag jarig?</h1>
+        <p class="subtitle">Voer je geboortedatum in en ontdek het!</p>
+        
+        <form id="birthdayForm">
+            <div class="form-group">
+                <label for="day">Dag</label>
+                <input type="number" id="day" min="1" max="31" required aria-label="Geboortedag">
+            </div>
+            
+            <div class="form-group">
+                <label for="month">Maand</label>
+                <input type="number" id="month" min="1" max="12" required aria-label="Geboortemaand">
+            </div>
+            
+            <div class="form-group">
+                <label for="year">Jaar</label>
+                <input type="number" id="year" min="1900" max="2024" required aria-label="Geboortejaar">
+            </div>
+            
+            <button type="submit" class="btn" id="checkBtn">
+                🎉 Check of ik jarig ben!
+            </button>
+        </form>
+        
+        <div id="result" class="hidden"></div>
+    </div>
+
+    <script>
+        // Global state
+        let isBirthday = false;
+        let userAge = 0;
+        
+        // DOM elements
+        const form = document.getElementById('birthdayForm');
+        const result = document.getElementById('result');
+        const checkBtn = document.getElementById('checkBtn');
+        
+        // Check if today is user's birthday
+        function checkBirthday(day, month, year) {
+            const today = new Date();
+            const currentDay = today.getDate();
+            const currentMonth = today.getMonth() + 1; // JavaScript months are 0-indexed
+            const currentYear = today.getFullYear();
+            
+            // Calculate age
+            userAge = currentYear - year;
+            const hasHadBirthdayThisYear = currentMonth > month || (currentMonth === month && currentDay >= day);
+            if (!hasHadBirthdayThisYear) {
+                userAge--;
+            }
+            
+            // Handle leap year birthdays (Feb 29)
+            if (month === 2 && day === 29) {
+                const isLeapYear = (year) => (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+                
+                if (!isLeapYear(currentYear)) {
+                    return showLeapYearMessage();
+                }
+            }
+            
+            return currentDay === day && currentMonth === month;
+        }
+        
+        // Show leap year message
+        function showLeapYearMessage() {
+            result.innerHTML = `
+                <div class="leap-year-message">
+                    <h2>🗓️ Bijzondere situatie!</h2>
+                    <p>Jouw verjaardag (29 februari) bestaat alleen in schrikkeljaren!</p>
+                    <p>Vier je vandaag op 28 februari of wacht je tot 1 maart?</p>
+                    <div class="age-display">Je bent ${userAge} jaar oud</div>
+                    ${generateShareButtons(false)}
+                </div>
+            `;
+            result.classList.remove('hidden');
+            return false;
+        }
+        
+        // Generate share buttons
+        function generateShareButtons(isBday) {
+            const baseUrl = 'https://benikvandaagjarig.nl';
+            const bdayText = encodeURIComponent('🎉 Ik ben vandaag jarig! Check het zelf op benikvandaagjarig.nl');
+            const notBdayText = encodeURIComponent('Nee, ik ben niet jarig… Ben jij het wel? 👉 benikvandaagjarig.nl');
+            const text = isBday ? bdayText : notBdayText;
+            
+            return `
+                <div class="share-buttons">
+                    <a href="https://wa.me/?text=${text}" target="_blank" class="share-btn whatsapp">
+                        📱 WhatsApp
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=${baseUrl}" target="_blank" class="share-btn facebook">
+                        📘 Facebook
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?text=${text}&url=${baseUrl}" target="_blank" class="share-btn twitter">
+                        🐦 X (Twitter)
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${baseUrl}" target="_blank" class="share-btn linkedin">
+                        💼 LinkedIn
+                    </a>
+                </div>
+            `;
+        }
+        
+        // Create floating balloons
+        function createBalloons() {
+            const balloonColors = ['var(--cherry-blossom)', 'var(--uranian-blue)', 'var(--ice-blue)', 'var(--light-green)'];
+            
+            for (let i = 0; i < 4; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.backgroundColor = balloonColors[i];
+                balloon.style.left = Math.random() * 80 + 10 + '%';
+                balloon.style.animationDelay = -Math.random() * 6 + 's';
+                document.body.appendChild(balloon);
+                
+                // Remove balloon after animation
+                setTimeout(() => {
+                    if (balloon.parentNode) {
+                        balloon.parentNode.removeChild(balloon);
+                    }
+                }, 10000);
+            }
+        }
+        
+        // Trigger confetti
+        function triggerConfetti() {
+            if (typeof confetti !== 'undefined') {
+                const colors = ['#e8aeb7', '#b8e1ff', '#a9fff7', '#94fbab', '#82aba1'];
+                
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: colors
+                });
+                
+                // Second burst
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 50,
+                        spread: 60,
+                        origin: { y: 0.6 },
+                        colors: colors
+                    });
+                }, 200);
+            }
+        }
+        
+        // Play birthday sound (only after user interaction)
+        function playBirthdaySound() {
+            // Create a simple beep sound using Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(523, audioContext.currentTime); // C5 note
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+        
+        // Handle form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted!'); // Debug log
+            
+            const dayValue = document.getElementById('day').value;
+            const monthValue = document.getElementById('month').value;
+            const yearValue = document.getElementById('year').value;
+            
+            console.log('Values:', dayValue, monthValue, yearValue); // Debug log
+            
+            const day = parseInt(dayValue);
+            const month = parseInt(monthValue);
+            const year = parseInt(yearValue);
+            
+            // More lenient validation - just check if we have numbers
+            if (isNaN(day) || isNaN(month) || isNaN(year)) {
+                alert('Vul alle velden in met geldige nummers!');
+                return;
+            }
+            
+            if (day < 1 || day > 31) {
+                alert('Dag moet tussen 1 en 31 zijn!');
+                return;
+            }
+            
+            if (month < 1 || month > 12) {
+                alert('Maand moet tussen 1 en 12 zijn!');
+                return;
+            }
+            
+            if (year < 1900 || year > 2024) {
+                alert('Jaar moet tussen 1900 en 2024 zijn!');
+                return;
+            }
+            
+            // Check if date is valid (e.g., not Feb 30)
+            const testDate = new Date(year, month - 1, day);
+            if (testDate.getDate() !== day || testDate.getMonth() !== month - 1 || testDate.getFullYear() !== year) {
+                alert('Deze datum bestaat niet!');
+                return;
+            }
+            
+            console.log('Starting check...'); // Debug log
+            checkBtn.disabled = true;
+            checkBtn.textContent = '🔍 Even checken...';
+            
+            setTimeout(() => {
+                console.log('Processing birthday check...'); // Debug log
+                
+                isBirthday = checkBirthday(day, month, year);
+                console.log('Is birthday:', isBirthday); // Debug log
+                
+                if (isBirthday) {
+                    result.className = 'result birthday';
+                    result.innerHTML = `
+                        <h2 class="bounce">🎉 GEFELICITEERD!</h2>
+                        <p>Ja! Je bent vandaag ${userAge} jaar geworden!</p>
+                        <p>🎂 Proficiat met je verjaardag! 🎈</p>
+                        <div class="age-display">Happy Birthday! 🎊</div>
+                        ${generateShareButtons(true)}
+                    `;
+                    
+                    // Celebration effects
+                    createBalloons();
+                    triggerConfetti();
+                    playBirthdaySound();
+                    
+                } else if (!result.innerHTML.includes('schrikkeljaren')) {
+                    result.className = 'result not-birthday';
+                    result.innerHTML = `
+                        <h2>😔 Nee, je bent niet jarig</h2>
+                        <p>Helaas! Vandaag is niet jouw verjaardag.</p>
+                        <p><strong>Aan het werk!</strong> 💪</p>
+                        <div class="age-display">Je bent ${userAge} jaar oud</div>
+                        ${generateShareButtons(false)}
+                    `;
+                }
+                
+                result.classList.remove('hidden');
+                checkBtn.disabled = false;
+                checkBtn.textContent = '🔄 Opnieuw checken';
+                
+                // Scroll to result on mobile
+                result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+                console.log('Check completed!'); // Debug log
+                
+            }, 1000);
+        });
+        
+        // Also add click handler as backup
+        checkBtn.addEventListener('click', function(e) {
+            if (e.target === checkBtn) {
+                console.log('Button clicked directly'); // Debug log
+                form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+            }
+        });
+        
+        // Add some keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                const inputs = Array.from(document.querySelectorAll('input'));
+                const currentIndex = inputs.indexOf(e.target);
+                
+                if (currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus();
+                } else {
+                    checkBtn.focus();
+                }
+            }
+        });
+        
+        // Auto-focus first input
+        document.getElementById('day').focus();
+        
+        // Set current year as max and default suggestion
+        const currentYear = new Date().getFullYear();
+        document.getElementById('year').max = currentYear;
+        
+        // Add some visual feedback for invalid dates
+        document.getElementById('day').addEventListener('input', function() {
+            const month = parseInt(document.getElementById('month').value) || 1;
+            const year = parseInt(document.getElementById('year').value) || 2000;
+            const daysInMonth = new Date(year, month, 0).getDate();
+            
+            this.max = daysInMonth;
+            
+            if (parseInt(this.value) > daysInMonth) {
+                this.style.borderColor = '#ef4444';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+            }
+        });
+        
+        // Update max days when month/year changes
+        document.getElementById('month').addEventListener('change', function() {
+            document.getElementById('day').dispatchEvent(new Event('input'));
+        });
+        
+        document.getElementById('year').addEventListener('change', function() {
+            document.getElementById('day').dispatchEvent(new Event('input'));
+        });
+        
+        console.log('🎂 Ben ik vandaag jarig? - Website loaded successfully!');
+    </script>
+</body>
+</html>
