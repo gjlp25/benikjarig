@@ -4,6 +4,44 @@ import { triggerConfetti } from './animations';
 import { generateShareHtml, openShareDialog, shouldUseWebShare, sharePayload } from './sharing';
 import { initConsent } from './consent';
 
+const NOT_BIRTHDAY_MESSAGES = [
+  'Aan het werk!',
+  'Nog 364 dagen te gaan… 💪',
+  'Trakteer jezelf dan maar op koffie ☕',
+  'Geen taart vandaag, alleen spreadsheets 🍰➡️📄',
+  'Je baas wacht! 😏',
+  'Ach joh, iedere dag is een feestje 🎉 (behalve vandaag).',
+  'Probeer het morgen nog eens 🤷‍♂️',
+  'Niet jarig, wél bijzonder ❤️',
+  'Jarig? Nee. Productief? Hopelijk wel.',
+  'Sorry, geen confetti — alleen deadlines 🎯',
+  'Je kunt nog altijd doen alsof. Niemand merkt het.',
+  'Taartloos, maar niet waardeloos 🍰❌',
+  'Vier vandaag dat je níet oud wordt! 🧓➡️🚫',
+  'De hamster van iemand anders is misschien wel jarig 🐹🎈',
+  'Je hebt geen reden voor taart, maar wel voor koffie.',
+  'Geen feestje, wel facturen. 🧾',
+  'Toch maar een toetje nemen vanavond? 🥧',
+  'Nog even volhouden… je moment komt eraan.',
+  'Het is vast iemands verjaardag — gewoon niet de jouwe.',
+  'Geen verjaardagskaarsjes, wel gaslicht van de energierekening 🕯️💸',
+  'Trakteer je collega’s dan maar op je glimlach 🙂',
+  'De wereld draait door. Jij ook vandaag.',
+  'Geen taart, maar wel een stukje realiteit 🍽️',
+  'Iedere dag is een cadeautje 🎁 (sommige alleen wat minder leuk ingepakt).',
+  'Misschien ben je op een andere planeet wél jarig. 🚀',
+  'Gefeliciteerd met… dinsdag.',
+  'Vandaag geen feest, wel verse kansen 🌱',
+  'Geen verjaardagskaarsjes, maar wel een browser-tabje meer.',
+  'Jarig in je hart telt ook, toch? 💖',
+  'Tijd om iets nuttigs te doen. Of Netflix. Jij beslist.'
+];
+
+function randomNotBirthdayMessage() {
+  const idx = Math.floor(Math.random() * NOT_BIRTHDAY_MESSAGES.length);
+  return NOT_BIRTHDAY_MESSAGES[idx];
+}
+
 function buildForm() {
   const wrapper = createEl('div', { class: 'container' }) as HTMLElement;
 
@@ -325,7 +363,7 @@ function mountApp() {
         setHtml(modalRoot, `
           <h2 id="result-heading">😔 Nee, je bent niet jarig</h2>
           <p>Helaas! Vandaag is niet jouw verjaardag.</p>
-          <p><strong>Aan het werk!</strong> 💪</p>
+          <p><strong>${randomNotBirthdayMessage()}</strong></p>
           <div class="age-display">Je bent ${res.age ?? '-'} jaar oud</div>
           ${generateShareHtml(false)}
         `);
