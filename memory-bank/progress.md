@@ -43,3 +43,13 @@
 - 2025-10-02 — Added Playwright DOM-order test, integrated axe-playwright check (no violations), added Vitest unit for `shouldUseWebShare` (all tests passed), performed visual verification (screenshots saved to `test-results/visual/`), and created CI workflow (`.github/workflows/ci.yml`).
 - 2025-09-26 — Applied JS & CSS fixes to ensure correct DOM order and remove overlap between form/result/footer; updated Memory Bank.
 - 2025-09-18 — Accessibility improvements and OG endpoint implemented.
+
+---
+
+### Memory Bank — Update log
+- 2025-10-04 — Memory bank updated on user request. Reviewed all memory-bank files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`). No functional code changes were made. Noted current state and readiness for public deployment (Vercel recommended; Netlify/Cloudflare as alternatives). Switched to ACT MODE to proceed with requested updates and next steps.
+- Next recommended actions:
+  - Decide on hosting provider (Vercel, Netlify, Cloudflare Pages, or GitHub Pages with static OG fallbacks).
+  - If proceeding with Vercel, connect repository and verify deploy settings (build: `npm run build`, output: `dist`).
+  - If choosing Netlify or Cloudflare Pages, plan migration for `api/og/route.ts` to respective serverless function format and convert `vercel.json` headers to platform-specific config.
+  - Commit and tag a release after final review; monitor CI checks and visual diffs in PR.
