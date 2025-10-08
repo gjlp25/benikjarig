@@ -42,6 +42,39 @@ function randomNotBirthdayMessage() {
   return NOT_BIRTHDAY_MESSAGES[idx];
 }
 
+const BIRTHDAY_MESSAGES = [
+  'Happy Birthday! 🥳',
+  'Gefeliciteerd met het ouder worden — alweer! 🎈',
+  'Tijd voor taart, drama en aandacht 🍰✨',
+  'Vandaag mág alles (behalve volwassen doen) 😜',
+  'Nog één dag dichter bij korting op de bus 🚌🎉',
+  'Je bent officieel vintage 👴👵',
+  'Vier het alsof je geen verplichtingen hebt 🎊',
+  'Eén dag per jaar dat je legaal mag glimmen 🌟',
+  'Je innerlijke kind heeft vandaag vrijaf 👶🎂',
+  'Kaarsjes uitblazen, wensen aanzetten 💫',
+  'Gefeliciteerd! Je respawn was succesvol 🕹️',
+  'Nog één rondje om de zon overleefd ☀️👏',
+  'Tijd om de realiteit te negeren en taart te eten 🍰',
+  'Maak van vandaag een “sorry ik ben jarig”-dag 🙃',
+  'Hoera! Weer een jaartje dichter bij pensioen 🎉',
+  'De wereld is vandaag officieel een stukje ouder. En jij dus ook. 🌍',
+  'Je bent niet oud, je bent goed gerijpt 🍷',
+  'Vandaag hoef je niks te doen — behalve genieten (en eten) 😋',
+  'Gefeliciteerd, legende! 🏆',
+  'Doe alsof je verrast bent 🎁😅',
+  'Tijd om je innerlijke diva los te laten 💅',
+  'Vandaag mag je alles bestellen met “want ik ben jarig” 🍕🍾',
+  'Vier het groot! (Of klein. Je browser weet het niet.)',
+  'Jij verdient confetti. Veel confetti. 🎊',
+  'Nog even en je krijgt een lifetime achievement award 🎖️'
+];
+
+function randomBirthdayMessage() {
+  const idx = Math.floor(Math.random() * BIRTHDAY_MESSAGES.length);
+  return BIRTHDAY_MESSAGES[idx];
+}
+
 function buildForm() {
   const wrapper = createEl('div', { class: 'container' }) as HTMLElement;
 
@@ -335,7 +368,7 @@ function mountApp() {
               <span aria-hidden="true">🎈</span>
             </p>
 
-            <h3 class="result-line en">Happy Birthday! 🥳</h3>
+            <h3 class="result-line en">${randomBirthdayMessage()}</h3>
 
             <div class="result-actions" role="group" aria-label="Deel dit">
               ${generateShareHtml(true)}
