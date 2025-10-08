@@ -42,7 +42,7 @@ function appendFooter() {
   footer.className = 'site-footer';
   footer.innerHTML = `
     <div class="footer-inner">
-      <p>© 2025 benikvandaagjarig.nl<br/>Gemaakt door [jouw naam/alias]<br/>Contact: info@benikvandaagjarig.nl</p>
+      <p>© 2025 benikvandaagjarig.nl<br/>Gemaakt door Robert Postma<br/>Contact: info@benikvandaagjarig.nl</p>
       <p class="muted">Laatste update: september 2025<br/><a href="/privacy.html">Privacyverklaring</a></p>
     </div>
   `;
