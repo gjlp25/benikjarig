@@ -4,77 +4,6 @@ import { triggerConfetti } from './animations';
 import { generateShareHtml, openShareDialog, shouldUseWebShare, sharePayload } from './sharing';
 import { initConsent } from './consent';
 
-const NOT_BIRTHDAY_MESSAGES = [
-  'Aan het werk!',
-  'Nog 364 dagen te gaan… 💪',
-  'Trakteer jezelf dan maar op koffie ☕',
-  'Geen taart vandaag, alleen spreadsheets 🍰➡️📄',
-  'Je baas wacht! 😏',
-  'Ach joh, iedere dag is een feestje 🎉 (behalve vandaag).',
-  'Probeer het morgen nog eens 🤷‍♂️',
-  'Niet jarig, wél bijzonder ❤️',
-  'Jarig? Nee. Productief? Hopelijk wel.',
-  'Sorry, geen confetti — alleen deadlines 🎯',
-  'Je kunt nog altijd doen alsof. Niemand merkt het.',
-  'Taartloos, maar niet waardeloos 🍰❌',
-  'Vier vandaag dat je níet oud wordt! 🧓➡️🚫',
-  'De hamster van iemand anders is misschien wel jarig 🐹🎈',
-  'Je hebt geen reden voor taart, maar wel voor koffie.',
-  'Geen feestje, wel facturen. 🧾',
-  'Toch maar een toetje nemen vanavond? 🥧',
-  'Nog even volhouden… je moment komt eraan.',
-  'Het is vast iemands verjaardag — gewoon niet de jouwe.',
-  'Geen verjaardagskaarsjes, wel gaslicht van de energierekening 🕯️💸',
-  'Trakteer je collega’s dan maar op je glimlach 🙂',
-  'De wereld draait door. Jij ook vandaag.',
-  'Geen taart, maar wel een stukje realiteit 🍽️',
-  'Iedere dag is een cadeautje 🎁 (sommige alleen wat minder leuk ingepakt).',
-  'Misschien ben je op een andere planeet wél jarig. 🚀',
-  'Gefeliciteerd met… dinsdag.',
-  'Vandaag geen feest, wel verse kansen 🌱',
-  'Geen verjaardagskaarsjes, maar wel een browser-tabje meer.',
-  'Jarig in je hart telt ook, toch? 💖',
-  'Tijd om iets nuttigs te doen. Of Netflix. Jij beslist.'
-];
-
-function randomNotBirthdayMessage() {
-  const idx = Math.floor(Math.random() * NOT_BIRTHDAY_MESSAGES.length);
-  return NOT_BIRTHDAY_MESSAGES[idx];
-}
-
-const BIRTHDAY_MESSAGES = [
-  'Happy Birthday! 🥳',
-  'Gefeliciteerd met het ouder worden — alweer! 🎈',
-  'Tijd voor taart, drama en aandacht 🍰✨',
-  'Vandaag mág alles (behalve volwassen doen) 😜',
-  'Nog één dag dichter bij korting op de bus 🚌🎉',
-  'Je bent officieel vintage 👴👵',
-  'Vier het alsof je geen verplichtingen hebt 🎊',
-  'Eén dag per jaar dat je legaal mag glimmen 🌟',
-  'Je innerlijke kind heeft vandaag vrijaf 👶🎂',
-  'Kaarsjes uitblazen, wensen aanzetten 💫',
-  'Gefeliciteerd! Je respawn was succesvol 🕹️',
-  'Nog één rondje om de zon overleefd ☀️👏',
-  'Tijd om de realiteit te negeren en taart te eten 🍰',
-  'Maak van vandaag een “sorry ik ben jarig”-dag 🙃',
-  'Hoera! Weer een jaartje dichter bij pensioen 🎉',
-  'De wereld is vandaag officieel een stukje ouder. En jij dus ook. 🌍',
-  'Je bent niet oud, je bent goed gerijpt 🍷',
-  'Vandaag hoef je niks te doen — behalve genieten (en eten) 😋',
-  'Gefeliciteerd, legende! 🏆',
-  'Doe alsof je verrast bent 🎁😅',
-  'Tijd om je innerlijke diva los te laten 💅',
-  'Vandaag mag je alles bestellen met “want ik ben jarig” 🍕🍾',
-  'Vier het groot! (Of klein. Je browser weet het niet.)',
-  'Jij verdient confetti. Veel confetti. 🎊',
-  'Nog even en je krijgt een lifetime achievement award 🎖️'
-];
-
-function randomBirthdayMessage() {
-  const idx = Math.floor(Math.random() * BIRTHDAY_MESSAGES.length);
-  return BIRTHDAY_MESSAGES[idx];
-}
-
 function buildForm() {
   const wrapper = createEl('div', { class: 'container' }) as HTMLElement;
 
@@ -113,7 +42,7 @@ function appendFooter() {
   footer.className = 'site-footer';
   footer.innerHTML = `
     <div class="footer-inner">
-      <p>© 2025 benikvandaagjarig.nl<br/>Gemaakt door Robert Postma<br/>Contact: info@benikvandaagjarig.nl</p>
+      <p>© 2025 benikvandaagjarig.nl<br/>Gemaakt door [jouw naam/alias]<br/>Contact: info@benikvandaagjarig.nl</p>
       <p class="muted">Laatste update: september 2025<br/><a href="/privacy.html">Privacyverklaring</a></p>
     </div>
   `;
@@ -206,15 +135,14 @@ function mountApp() {
     const isBday = !!target.closest('.result.birthday');
 
     // Helper: announce ARIA live messages
-      function announce(msg: string) {
+    function announce(msg: string) {
       let live = qs('#share-live') as HTMLElement | null;
       if (!live) {
         live = createEl('div') as HTMLElement;
         live.id = 'share-live';
         live.setAttribute('aria-live', 'polite');
         live.className = 'sr-only';
-        const liveHost = qs('#app') as HTMLElement | null;
-        (liveHost ?? document.body).appendChild(live);
+        document.body.appendChild(live);
       }
       live.textContent = msg;
       setTimeout(() => { live && (live.textContent = ''); }, 2000);
@@ -293,10 +221,7 @@ function mountApp() {
   on(form, 'submit', (ev: Event) => {
     ev.preventDefault();
     // Ensure any previous modal state is cleared before processing a new submission
-    try {
-      const _app = qs('#app') as HTMLElement | null;
-      if (_app) _app.removeAttribute('aria-hidden');
-    } catch (e) { /* ignore */ }
+    try { if (mainEl) mainEl.removeAttribute('aria-hidden'); } catch (e) { /* ignore */ }
 
     const day = parseInt(dayInput.value, 10);
     const month = parseInt(monthInput.value, 10);
@@ -315,78 +240,46 @@ function mountApp() {
       const res = evaluateBirthday(day, month, year);
 
       if (res.leapYearMessage) {
-        modalRoot.className = 'leap-year';
+        modalRoot.className = '';
         setHtml(modalRoot, `
-          <section role="region" aria-label="Resultaat" class="container-result" aria-live="polite">
-            <div class="result-particles" aria-hidden="true">
-              <span class="p"></span><span class="p"></span><span class="p"></span>
-              <span class="p"></span><span class="p"></span>
-            </div>
-
-            <h2 id="result-heading" class="result-title">🗓️ Bijzondere situatie!</h2>
-
-            <p class="result-line">Jouw verjaardag (29 februari) bestaat alleen in schrikkeljaren!</p>
-
-            <p class="result-sub">Vier je vandaag op 28 februari of wacht je tot 1 maart?</p>
-
+          <div class="leap-year-message">
+            <h2 id="result-heading">🗓️ Bijzondere situatie!</h2>
+            <p>Jouw verjaardag (29 februari) bestaat alleen in schrikkeljaren!</p>
+            <p>Vier je vandaag op 28 februari of wacht je tot 1 maart?</p>
             <div class="age-display">Je bent ${res.age ?? '-'} jaar oud</div>
-
-            <div class="result-actions" role="group" aria-label="Deel dit">
-              ${generateShareHtml(false)}
-            </div>
-          </section>
+            ${generateShareHtml(false)}
+          </div>
         `);
         modalRoot.setAttribute('role', 'dialog');
         modalRoot.setAttribute('aria-modal', 'true');
         modalRoot.setAttribute('aria-labelledby', 'result-heading');
-        // Mark underlying app container as hidden to screen readers while dialog is visible
-        try {
-          const _app = qs('#app') as HTMLElement | null;
-          if (_app) _app.setAttribute('aria-hidden', 'true');
-        } catch (e) { /* ignore */ }
-        // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
+        // Mark underlying main as hidden to screen readers while dialog is visible
+        try { if (mainEl) mainEl.setAttribute('aria-hidden', 'true'); } catch (e) { /* ignore */ }
+        // Focus the result heading for screen readers
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
-          // No tabindex/focus here — dialog has role="dialog" and aria-labelledby for accessibility.
+          headingEl.setAttribute('tabindex', '-1');
+          headingEl.focus();
         }
       } else if (res.isBirthday) {
         modalRoot.className = 'result birthday';
         setHtml(modalRoot, `
-          <section role="region" aria-label="Resultaat" class="container-result theme-rose" aria-live="polite">
-            <div class="result-particles" aria-hidden="true">
-              <span class="p"></span><span class="p"></span><span class="p"></span>
-              <span class="p"></span><span class="p"></span>
-            </div>
-
-            <h2 id="result-heading" class="result-title">🎉 GEFELICITEERD!</h2>
-
-            <p class="result-line">Ja! Je bent vandaag ${res.age} jaar geworden!</p>
-
-            <p class="result-sub">
-              <span aria-hidden="true">🎂</span>
-              Proficiat met je verjaardag!
-              <span aria-hidden="true">🎈</span>
-            </p>
-
-            <h3 class="result-line en">${randomBirthdayMessage()}</h3>
-
-            <div class="result-actions" role="group" aria-label="Deel dit">
-              ${generateShareHtml(true)}
-            </div>
-          </section>
+          <h2 id="result-heading" class="bounce">🎉 GEFELICITEERD!</h2>
+          <p>Ja! Je bent vandaag ${res.age} jaar geworden!</p>
+          <p>🎂 Proficiat met je verjaardag! 🎈</p>
+          <div class="age-display">Happy Birthday! 🎊</div>
+          ${generateShareHtml(true)}
         `);
         modalRoot.setAttribute('role', 'dialog');
         modalRoot.setAttribute('aria-modal', 'true');
         modalRoot.setAttribute('aria-labelledby', 'result-heading');
-        // Mark underlying app container as hidden to screen readers while dialog is visible
-        try {
-          const _app = qs('#app') as HTMLElement | null;
-          if (_app) _app.setAttribute('aria-hidden', 'true');
-        } catch (e) { /* ignore */ }
-        // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
+        // Mark underlying main as hidden to screen readers while dialog is visible
+        try { if (mainEl) mainEl.setAttribute('aria-hidden', 'true'); } catch (e) { /* ignore */ }
+        // Focus the result heading for screen readers
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
-          // No tabindex/focus here — dialog has role="dialog" and aria-labelledby for accessibility.
+          headingEl.setAttribute('tabindex', '-1');
+          headingEl.focus();
         }
 
         // Celebration effects (only after user interaction allowed for sound)
@@ -396,22 +289,20 @@ function mountApp() {
         setHtml(modalRoot, `
           <h2 id="result-heading">😔 Nee, je bent niet jarig</h2>
           <p>Helaas! Vandaag is niet jouw verjaardag.</p>
-          <p><strong>${randomNotBirthdayMessage()}</strong></p>
+          <p><strong>Aan het werk!</strong> 💪</p>
           <div class="age-display">Je bent ${res.age ?? '-'} jaar oud</div>
           ${generateShareHtml(false)}
         `);
         modalRoot.setAttribute('role', 'dialog');
         modalRoot.setAttribute('aria-modal', 'true');
         modalRoot.setAttribute('aria-labelledby', 'result-heading');
-        // Mark underlying app container as hidden to screen readers while dialog is visible
-        try {
-          const _app = qs('#app') as HTMLElement | null;
-          if (_app) _app.setAttribute('aria-hidden', 'true');
-        } catch (e) { /* ignore */ }
-        // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
+        // Mark underlying main as hidden to screen readers while dialog is visible
+        try { if (mainEl) mainEl.setAttribute('aria-hidden', 'true'); } catch (e) { /* ignore */ }
+        // Focus the result heading for screen readers
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
-          // No tabindex/focus here — dialog has role="dialog" and aria-labelledby for accessibility.
+          headingEl.setAttribute('tabindex', '-1');
+          headingEl.focus();
         }
       }
 

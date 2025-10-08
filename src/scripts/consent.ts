@@ -153,8 +153,7 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
     }
   } catch (e) { /* ignore */ }
 
-  // Append banner into the provided target (usually <main>) so the dialog is inside page landmarks.
-  target.appendChild(banner);
+  host.appendChild(banner);
 
   return teardown;
 }

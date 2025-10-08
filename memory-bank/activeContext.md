@@ -1,53 +1,44 @@
 # activeContext.md — benikvandaagjarig.nl
 
-## Huidige focus (geüpdatet 2025-10-02)
+## Huidige focus (geüpdatet)
 
-- Finaliseer en verifieer UI-verbeteringen: result-design (theme: rose), DOM-order fixes, en accessibility tweaks.
-- Documenteer recente codewijzigingen en next steps in de Memory Bank.
-- Rond resterende taken af: visual-regressie in CI, gerichte E2E-assertions en cleanup CSS.
+- Corrigeren van layout-issues tussen formulier, result-card en footer.
+- Duidelijke, consistente DOM-volgorde waar `<main>` direct de form container bevat en de result container (`#modal-root`) volgt — footer komt daarna.
+- Documentatie (Memory Bank) bijwerken met recente wijzigingen.
 
 ## Recente wijzigingen (laatste updates)
-- Datum: 2025-10-02
-- CI & infra:
-  - GitHub Actions workflow toegevoegd/uitgebreid: `.github/workflows/ci.yml` (lint, type-check, Vitest, build, Playwright E2E met axe, visual-regression stap, upload test-results).
-- Tests & verificatie:
-  - Vitest unit toegevoegd voor `shouldUseWebShare` en lokaal succesvol uitgevoerd.
-  - Playwright E2E tests inclusief axe-playwright geconfigureerd en uitgevoerd.
-  - Visuele verificatie: screenshots opgeslagen in `test-results/visual/` en baseline snapshots toegevoegd onder `tests/e2e/__snapshots__/`.
-  - Playwright visual-spec toegevoegd: `tests/e2e/visual.spec.ts`.
-- Documentatie:
-  - `readme.md` aangemaakt met quick-start, tests, CI-overzicht en Memory Bank verwijzingen.
-  - `memory-bank/progress.md` bijgewerkt met recente status en changelog.
-- Assets:
-  - Statische OG-fallbacks toegevoegd: `public/og-default.svg` en `public/og-is-jarig.svg`.
-- UI/CSS/JS:
-  - DOM-order fixes en nieuwe `theme-rose` result-design aanwezig (zie `src/scripts/main.ts` en `src/styles/main.css`).
-  - Accessibility-tweaks en reduced-motion ondersteuning zijn toegepast.
+- JS:
+  - `#modal-root` wordt nu binnen `<main>` geplaatst (direct na `#app`) om correcte DOM-volgorde te garanderen zodat de result card altijd onder het formulier verschijnt.
+  - `appendFooter()` plaatst de reale footer direct na `<main>` (fallback naar body als main ontbreekt).
+  - Extra safeguard: script controleert verplaatste/voorgaande `#modal-root` en verplaatst deze naar binnen `<main>` bij mount to ensure order.
+- CSS:
+  - `src/styles/main.css` aangepast om:
+    - `main`, `.container` en `#modal-root` dezelfde `max-width` en centrering te geven (max-width: 500px).
+    - `#modal-root` marges ingesteld: `margin-top: 24px` (gap naar formulier) en `margin-bottom: 48px` (ruimte naar footer).
+    - `.result` en `.leap-year-message` in document flow (`position: static`) met gecentreerde tekst en share-buttons in een horizontale, wrap-capabele rij.
+    - Decoratieve top-strip is inside `.result` via `::before` met absolute-positionering maar zonder negatieve marges (card padding reserveert ruimte).
+  - Overbodige `padding-bottom` op `main` verwijderd; footer wordt in normale flow gerenderd.
+- Accessibility & UX:
+  - Modals behouden `role="dialog"`, `aria-modal` en focus management.
+  - While modal visible, `<main>` marked `aria-hidden` for assistive tech.
+  - Share buttons remain anchors + native share fallback; ARIA live announcements present for clipboard copy.
+- Dev:
+  - HMR updates applied; dev server running locally (Vite) and reflects CSS/JS changes immediately.
 
 ## Status nu
-- Visuele en DOM-order issues tussen formulier, result en footer zijn opgelost.
-- Unit- en E2E-tests draaien lokaal; axe-checks uitgevoerd.
-- Baseline screenshots aanwezig voor visual regression; Playwright visual tests scaffolded.
-- CI-workflow draait alle checks on PR (visual step runs separately and is allowed to fail by default).
+- Overlap issue tussen form en result card is verholpen in DOM en CSS (result card no longer overlaps form).
+- Footer is no longer inserted inside the result card in normal flows (JS ensures correct order).
+- Share buttons show as a horizontal row and wrap on small screens.
+- Some visual spacing and centering tweaks completed; final verification in browser required.
 
-## Volgende stappen (prioriteit)
-1. Integratie en review van visual-regressie in CI:
-   - Monitor visuele diffs in PRs; configureer policy for baseline updates.
-2. Voeg gerichte E2E-assertions toe:
-   - Share-button wrapping (target: 480–600px) en DOM-order checks where not present.
-3. Cleanup en finalisatie:
-   - Verwijder verouderde CSS-regels en refactor kleine layout quirks for narrow viewports.
-4. Open PR met huidige wijzigingen zodat CI alle checks valideert; na review merge en release-tag aanmaken.
-5. Optioneel: genereer PNG-varianten van OG-fallbacks als bepaalde crawlers dat vereisen.
+## Volgende stappen
+1. Visuele verificatie in verschillende viewports (mobile/desktop) en browsers. Fix any remaining centering or spacing edge cases.
+2. Add/adjust responsive breakpoints if share buttons wrap prematurely on specific widths (target wrap < 480–600px).
+3. Run Playwright E2E and re-run axe-playwright to ensure no regressions in accessibility.
+4. Update `readme.md` and Memory Bank with final deployment notes once verified.
+5. Consider adding a small integration test that verifies DOM order (`main > #app > #modal-root` and footer after main).
 
 ## Actieve beslissingen
-- Modals blijven in document flow (geen fixed overlays) voor voorspelbare layout en betere a11y.
-- Privacy-first: geen datum of PII opslaan; analytics alleen na expliciete toestemming.
-- Feestelijke UI enkel toepassen voor echte "jarig" resultaten (conditioneel).
-
-## Referenties
-- Screenshots: `test-results/visual/`
-- Baseline snapshots: `tests/e2e/__snapshots__/`
-- CI workflow: `.github/workflows/ci.yml`
-- Visual helper: `tools/visual-verify.js`
-- Tests: `tests/e2e/`, `src/tests/`
+- Keep modals accessible and in-flow (no fixed overlays) to avoid layout overlap and improve predictable DOM order.
+- Maintain strict privacy rules: no DOB storage, analytics only after consent.
+- Continue prioritizing accessibility and minimal runtime footprint.

@@ -6,23 +6,17 @@
     <title>Ben ik vandaag jarig?</title>
     <meta name="description" content="Ontdek of je vandaag jarig bent! Een leuke gimmick website om te checken of het jouw verjaardag is." />
 
-    <!-- Open Graph (static fallbacks + dynamic OG endpoint) -->
+    <!-- Open Graph (placeholder images; replace with production OG generation later) -->
     <meta property="og:title" content="Ben ik vandaag jarig?" />
     <meta property="og:description" content="Ontdek of je vandaag jarig bent!" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://benikvandaagjarig.nl" />
-    <!-- Static fallback images (public/) -->
-    <meta property="og:image" content="https://benikvandaagjarig.nl/og-default.png" />
-    <meta property="og:image:alt" content="Ben ik vandaag jarig? Check het nu." />
-    <!-- Dynamic generator as primary source when available -->
     <meta property="og:image" content="https://benikvandaagjarig.nl/api/og?status=not-birthday" />
-    <!-- Variant for 'is jarig' state -->
-    <meta property="og:image" content="https://benikvandaagjarig.nl/og-is-jarig.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Ben ik vandaag jarig?" />
     <meta name="twitter:description" content="Ontdek of je vandaag jarig bent!" />
-    <meta name="twitter:image" content="https://benikvandaagjarig.nl/og-default.png" />
+    <meta name="twitter:image" content="https://benikvandaagjarig.nl/api/og?status=not-birthday" />
 
     <!-- Security niceties -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -37,7 +31,7 @@
   </head>
 
   <body>
-    <main role="main">
+    <main>
       <div id="app" class="container-root">
         <!-- The app will be hydrated by the module scripts.
              index.html in project root remains the canonical prototype/backup. -->
