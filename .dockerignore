@@ -1,0 +1,31 @@
+# Node artifacts
+node_modules
+npm-debug.log
+.pnp
+.pnp.js
+.vscode
+
+# Build outputs
+dist
+build
+
+# Local env / secrets
+.env
+.env.local
+.env.*.local
+
+# Tests & snapshots
+tests/e2e/__snapshots__
+test-results
+coverage
+
+# Git
+.git
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+backup/
