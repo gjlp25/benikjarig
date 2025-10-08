@@ -102,23 +102,70 @@ Notes:
 
 ---
 
-## 7 — Updating the site
-If you built on the server (git workflow):
-1. ssh server
-2. cd /path/to/project
-3. git pull origin main
-4. docker compose build --no-cache
-5. docker compose up -d --remove-orphans
+## 7 — Fixing "privacy.html shows index.html" (common SPA routing issue)
 
-If you pushed new image to registry or copied a new tar:
-1. docker pull your-registry/benikvandaagjarig:latest
-2. docker compose up -d --no-deps --build web
-or
-1. docker load -i benikvandaagjarig-new.tar
-2. docker stop benikvandaagjarig && docker rm benikvandaagjarig
-3. docker run ... with new tag
+Symptoms:
+- Opening `http://SERVER:8080/privacy.html` returns the main page rather than the privacy document.
 
-Rollback: keep previous image tags; re-run docker run with previous tag.
+Root causes:
+- Nginx SPA fallback is configured to serve `index.html` when the requested file is not found.
+- The built site inside `/usr/share/nginx/html` does not contain `privacy.html` at the expected path.
+- The container is running an old image that does not include the updated `nginx.conf` (or the `COPY nginx.conf` step was missed during build).
+
+Immediate checks (run on the Docker host):
+1. Confirm `privacy.html` exists in the built `dist` output:
+```bash
+cd /path/to/project
+ls -l dist/privacy.html
+```
+2. If container is running, inspect the files inside the container:
+```bash
+docker exec -it benikvandaagjarig ls -l /usr/share/nginx/html/privacy.html
+docker exec -it benikvandaagjarig cat /etc/nginx/conf.d/default.conf
+```
+3. Test from any machine (curl will show what is served):
+```bash
+curl -v http://10.0.30.30:8080/privacy.html
+```
+
+How to fix (rebuild + redeploy with updated nginx.conf):
+- Ensure `nginx.conf` in repo contains the `.html` handler (this repo includes it).
+- Rebuild and redeploy on the Docker host:
+
+Using docker (server-side build):
+```bash
+# from repo root on the server
+docker build -t benikvandaagjarig:latest .
+docker rm -f benikvandaagjarig || true
+docker run -d -p 8080:80 --name benikvandaagjarig benikvandaagjarig:latest
+```
+
+Using docker-compose:
+```bash
+# from repo root on the server
+docker compose build --no-cache
+docker compose up -d --remove-orphans
+```
+
+Notes:
+- If you build locally and transfer the image, ensure the local build included the updated `nginx.conf` before `docker save`.
+- If `docker` is not available on the host, use the local image transfer method described in section 3C.
+
+Troubleshooting if the problem persists:
+- Confirm the container actually contains the updated `nginx.conf`:
+```bash
+docker exec -it benikvandaagjarig cat /etc/nginx/conf.d/default.conf | sed -n '1,140p'
+```
+- Confirm the served file is present in the container:
+```bash
+docker exec -it benikvandaagjarig ls -l /usr/share/nginx/html/privacy.html
+```
+- View Nginx logs for clues:
+```bash
+docker exec -it benikvandaagjarig tail -n 200 /var/log/nginx/error.log
+docker exec -it benikvandaagjarig tail -n 200 /var/log/nginx/access.log
+```
+- If Nginx config inside container is still old, rebuild with `--no-cache` or ensure the Docker build context included the updated `nginx.conf`.
 
 ---
 
@@ -177,14 +224,14 @@ For HTTPS on a home server, use a reverse proxy (Caddy, Traefik, or Nginx) that 
 
 ---
 
-## 14 — Example commands (quick copy + deploy)
+## 14 — Example commands (quick copy & deploy)
 From your workstation (server reachable via SSH):
 - Copy project using rsync:
   - rsync -av --exclude node_modules --exclude test-results --exclude .git ./ user@server:/srv/benikvandaagjarig
 - SSH and deploy:
   - ssh user@server
   - cd /srv/benikvandaagjarig
-  - docker compose build
+  - docker compose build --no-cache
   - docker compose up -d
 
 ---
