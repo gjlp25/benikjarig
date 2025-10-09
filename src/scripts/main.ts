@@ -228,7 +228,7 @@ function mountApp() {
           announce('Link gekopieerd naar klembord');
           return true;
         }
-      } catch (e) {
+      } catch {
         // fall through to legacy
       }
       // Legacy textarea fallback
@@ -244,7 +244,7 @@ function mountApp() {
         announce('Link gekopieerd naar klembord');
         document.body.removeChild(ta);
         return true;
-      } catch (e) {
+      } catch {
         document.body.removeChild(ta);
         alert('Kopieer deze link: ' + text);
         return false;
@@ -407,7 +407,7 @@ function mountApp() {
         try {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
-        } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {

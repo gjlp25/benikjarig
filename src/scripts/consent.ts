@@ -47,7 +47,7 @@ export function hasConsent(): boolean {
  * Uses data-domain attribute; change domain here for production if needed.
  */
 export function loadPlausible(domain = 'benikvandaagjarig.nl') {
-  if ((window as any).plausible) return;
+  if (window.plausible) return;
   const s = document.createElement('script');
   s.defer = true;
   s.setAttribute('data-domain', domain);
@@ -134,8 +134,8 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
       banner.remove();
       try {
         target.removeAttribute('aria-hidden');
-      } catch (e) { /* ignore */ }
-    } catch (e) { /* ignore */ }
+      } catch { /* ignore */ }
+    } catch { /* ignore */ }
     if (prevFocus) prevFocus.focus();
   }
 
@@ -155,7 +155,7 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
     if (target && target.setAttribute) {
       target.setAttribute('aria-hidden', 'true');
     }
-  } catch (e) { /* ignore */ }
+  } catch { /* ignore */ }
 
   // Append banner into the provided target (usually <main>) so the dialog is inside page landmarks.
   target.appendChild(banner);
