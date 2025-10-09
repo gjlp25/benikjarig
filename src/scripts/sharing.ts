@@ -34,7 +34,7 @@ export function shouldUseWebShare(platform?: string) {
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
     const mobileFirst = ['whatsapp', 'telegram'];
     return isMobile || (platform ? mobileFirst.includes(String(platform).toLowerCase()) : false);
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -85,7 +85,7 @@ export function generateShareHtml(isBday: boolean) {
 
   // Always render real anchors (right-click / SEO friendly).
   // Add an extra native-share button when Web Share API is available.
-  const nativeButton = (typeof navigator !== 'undefined' && (navigator as any).share)
+  const nativeButton = (typeof navigator !== 'undefined' && typeof ((navigator as unknown as { share?: unknown }).share) === 'function')
     ? `<button class="share-btn native-share" data-share="native" aria-label="Deel via je apparaat">🔗 Delen</button>`
     : '';
 
