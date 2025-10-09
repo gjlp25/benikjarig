@@ -52,6 +52,7 @@ export function loadPlausible(domain = 'benikvandaagjarig.nl') {
   s.defer = true;
   s.setAttribute('data-domain', domain);
   s.src = 'https://plausible.io/js/plausible.js';
+  s.onload = () => { (window as any).plausible = true; };
   document.head.appendChild(s);
 }
 
