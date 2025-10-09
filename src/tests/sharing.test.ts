@@ -7,8 +7,8 @@ describe('shouldUseWebShare', () => {
     vi.resetAllMocks();
   });
 
-  test('returns true for mobile User-Agent (iPhone)', () => {
-    vi.stubGlobal('navigator', { userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0) AppleWebKit' } as any);
+    test('returns true for mobile User-Agent (iPhone)', () => {
+    vi.stubGlobal('navigator', { userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0) AppleWebKit' } as unknown as Navigator);
     expect(shouldUseWebShare()).toBe(true);
   });
 

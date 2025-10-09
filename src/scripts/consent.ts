@@ -6,6 +6,12 @@
  * - Accessible: buttons, focus management, simple markup
  */
 
+declare global {
+  interface Window {
+    plausible?: unknown;
+  }
+}
+
 const CONSENT_KEY = 'benikvandaag_consent' as const; // 'granted' | 'denied'
 
 type ConsentValue = 'granted' | 'denied' | null;
@@ -54,8 +60,6 @@ export function loadPlausible(domain = 'benikvandaagjarig.nl') {
  * Returns a teardown function to remove the banner.
  */
 export function showConsentBanner(options?: { container?: HTMLElement; domain?: string }) {
-  const container = options?.container ?? document.body;
-  const host = document.body;
   const target = options?.container ?? document.body;
   const domain = options?.domain ?? 'benikvandaagjarig.nl';
 

@@ -1,7 +1,7 @@
 import { createEl, setHtml, on, qs } from '../utils/dom-helpers';
 import { validateInput, evaluateBirthday } from './birthday-logic';
 import { triggerConfetti } from './animations';
-import { generateShareHtml, openShareDialog, shouldUseWebShare, sharePayload } from './sharing';
+import { generateShareHtml, shouldUseWebShare, sharePayload } from './sharing';
 import { initConsent } from './consent';
 
 const NOT_BIRTHDAY_MESSAGES = [
@@ -217,7 +217,7 @@ function mountApp() {
         (liveHost ?? document.body).appendChild(live);
       }
       live.textContent = msg;
-      setTimeout(() => { live && (live.textContent = ''); }, 2000);
+      setTimeout(() => { if (live) { live.textContent = ''; } }, 2000);
     }
 
     // Helper: clipboard fallback
@@ -296,7 +296,7 @@ function mountApp() {
     try {
       const _app = qs('#app') as HTMLElement | null;
       if (_app) _app.removeAttribute('aria-hidden');
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
 
     const day = parseInt(dayInput.value, 10);
     const month = parseInt(monthInput.value, 10);
@@ -343,7 +343,7 @@ function mountApp() {
         try {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
-        } catch (e) { /* ignore */ }
+        } catch { /* ignore */ }
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
@@ -382,7 +382,7 @@ function mountApp() {
         try {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
-        } catch (e) { /* ignore */ }
+        } catch { /* ignore */ }
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
