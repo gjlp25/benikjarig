@@ -23,6 +23,7 @@
     "axe-core": "^4.10.3",
     "axe-playwright": "^2.2.1",
     "eslint": "^8.50.0",
+    "eslint-config-prettier": "^10.1.8",
     "playwright": "^1.39.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2",
