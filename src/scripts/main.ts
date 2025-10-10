@@ -1,7 +1,7 @@
 import { createEl, setHtml, on, qs } from '../utils/dom-helpers';
 import { validateInput, evaluateBirthday } from './birthday-logic';
 import { triggerConfetti } from './animations';
-import { generateShareHtml, openShareDialog, shouldUseWebShare, sharePayload } from './sharing';
+import { generateShareHtml, shouldUseWebShare, sharePayload } from './sharing';
 import { initConsent } from './consent';
 
 const NOT_BIRTHDAY_MESSAGES = [
@@ -122,7 +122,8 @@ function appendFooter() {
   if (mainEl && mainEl.parentNode) {
     mainEl.parentNode.insertBefore(footer, mainEl.nextSibling);
   } else {
-    document.body.appendChild(footer);
+    const host = (qs('#app') as HTMLElement | null) ?? document.body;
+    (host as HTMLElement).appendChild(footer);
   }
 }
 
@@ -140,21 +141,14 @@ function mountApp() {
   const yearInput = qs('#year') as HTMLInputElement;
 
   // Modal root inserted inside <main> so the result appears directly after the form in DOM order
-  const mainEl = qs('main') as HTMLElement | null;
   let modalRoot = document.getElementById('modal-root') as HTMLElement | null;
   if (!modalRoot) {
     modalRoot = document.createElement('div');
     modalRoot.id = 'modal-root';
     modalRoot.className = 'hidden';
-    // Prefer inserting the modal root right after the app mount inside <main>
-    const appEl = qs('#app') as HTMLElement | null;
-    if (appEl && appEl.parentNode) {
-      appEl.parentNode.insertBefore(modalRoot, appEl.nextSibling);
-    } else if (mainEl) {
-      mainEl.appendChild(modalRoot);
-    } else {
-      document.body.appendChild(modalRoot);
-    }
+    // Prefer inserting the modal root inside <main> or #app so it remains within page landmarks
+    const host = (qs('main') as HTMLElement | null) ?? (qs('#app') as HTMLElement | null) ?? document.body;
+    (host as HTMLElement).appendChild(modalRoot);
   }
 
   // Set year constraints
@@ -213,11 +207,11 @@ function mountApp() {
         live.id = 'share-live';
         live.setAttribute('aria-live', 'polite');
         live.className = 'sr-only';
-        const liveHost = qs('#app') as HTMLElement | null;
-        (liveHost ?? document.body).appendChild(live);
+        const hostEl = (qs('main') as HTMLElement | null) ?? (qs('#app') as HTMLElement | null) ?? document.body;
+        (hostEl as HTMLElement).appendChild(live);
       }
       live.textContent = msg;
-      setTimeout(() => { live && (live.textContent = ''); }, 2000);
+      setTimeout(() => { if (live) { live.textContent = ''; } }, 2000);
     }
 
     // Helper: clipboard fallback
@@ -228,7 +222,7 @@ function mountApp() {
           announce('Link gekopieerd naar klembord');
           return true;
         }
-      } catch (e) {
+      } catch {
         // fall through to legacy
       }
       // Legacy textarea fallback
@@ -244,7 +238,7 @@ function mountApp() {
         announce('Link gekopieerd naar klembord');
         document.body.removeChild(ta);
         return true;
-      } catch (e) {
+      } catch {
         document.body.removeChild(ta);
         alert('Kopieer deze link: ' + text);
         return false;
@@ -296,7 +290,7 @@ function mountApp() {
     try {
       const _app = qs('#app') as HTMLElement | null;
       if (_app) _app.removeAttribute('aria-hidden');
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
 
     const day = parseInt(dayInput.value, 10);
     const month = parseInt(monthInput.value, 10);
@@ -317,7 +311,7 @@ function mountApp() {
       if (res.leapYearMessage) {
         modalRoot.className = 'leap-year';
         setHtml(modalRoot, `
-          <section role="region" aria-label="Resultaat" class="container-result" aria-live="polite">
+          <section aria-label="Resultaat" class="container-result" aria-live="polite">
             <div class="result-particles" aria-hidden="true">
               <span class="p"></span><span class="p"></span><span class="p"></span>
               <span class="p"></span><span class="p"></span>
@@ -343,7 +337,7 @@ function mountApp() {
         try {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
-        } catch (e) { /* ignore */ }
+        } catch { /* ignore */ }
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
@@ -352,7 +346,7 @@ function mountApp() {
       } else if (res.isBirthday) {
         modalRoot.className = 'result birthday';
         setHtml(modalRoot, `
-          <section role="region" aria-label="Resultaat" class="container-result theme-rose" aria-live="polite">
+          <section aria-label="Resultaat" class="container-result theme-rose" aria-live="polite">
             <div class="result-particles" aria-hidden="true">
               <span class="p"></span><span class="p"></span><span class="p"></span>
               <span class="p"></span><span class="p"></span>
@@ -382,7 +376,7 @@ function mountApp() {
         try {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
-        } catch (e) { /* ignore */ }
+        } catch { /* ignore */ }
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
@@ -407,7 +401,7 @@ function mountApp() {
         try {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
-        } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {

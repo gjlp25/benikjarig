@@ -6,6 +6,12 @@
  * - Accessible: buttons, focus management, simple markup
  */
 
+declare global {
+  interface Window {
+    plausible?: unknown;
+  }
+}
+
 const CONSENT_KEY = 'benikvandaag_consent' as const; // 'granted' | 'denied'
 
 type ConsentValue = 'granted' | 'denied' | null;
@@ -36,28 +42,17 @@ export function hasConsent(): boolean {
   return readConsent() === 'granted';
 }
 
-/**
- * Loads Plausible analytics script (cookieless) if not already loaded.
- * Uses data-domain attribute; change domain here for production if needed.
- */
-export function loadPlausible(domain = 'benikvandaagjarig.nl') {
-  if ((window as any).plausible) return;
-  const s = document.createElement('script');
-  s.defer = true;
-  s.setAttribute('data-domain', domain);
-  s.src = 'https://plausible.io/js/plausible.js';
-  document.head.appendChild(s);
-}
+/* Plausible analytics removed — using Vercel Analytics instead. */
 
 /**
  * Create and render a small consent banner.
  * Returns a teardown function to remove the banner.
  */
 export function showConsentBanner(options?: { container?: HTMLElement; domain?: string }) {
-  const container = options?.container ?? document.body;
-  const host = document.body;
-  const target = options?.container ?? document.body;
-  const domain = options?.domain ?? 'benikvandaagjarig.nl';
+  // Always prefer the explicit container passed in options, then fall back to <main>.
+  // This ensures initConsent({ container: qs('main') }) reliably places the banner inside <main>.
+  const hideTarget = options?.container ?? (document.querySelector('main') as HTMLElement | null) ?? document.body;
+  const appendTarget = options?.container ?? (document.querySelector('main') as HTMLElement | null) ?? document.body;
 
   const existing = document.getElementById('consent-banner');
   if (existing) return () => { /* no-op */ };
@@ -129,15 +124,20 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
     try {
       banner.remove();
       try {
-        target.removeAttribute('aria-hidden');
-      } catch (e) { /* ignore */ }
-    } catch (e) { /* ignore */ }
+        const appEl = hideTarget && (hideTarget.querySelector ? (hideTarget.querySelector('#app') as HTMLElement | null) : null);
+        if (appEl && appEl.removeAttribute) {
+          appEl.removeAttribute('aria-hidden');
+        } else if (hideTarget && (hideTarget as HTMLElement).removeAttribute) {
+          (hideTarget as HTMLElement).removeAttribute('aria-hidden');
+        }
+      } catch { /* ignore */ }
+    } catch { /* ignore */ }
     if (prevFocus) prevFocus.focus();
   }
 
   acceptBtn.addEventListener('click', () => {
     writeConsent('granted');
-    loadPlausible(domain);
+    // Analytics handled by Vercel in production; no client script to load here.
     teardown();
   });
 
@@ -146,15 +146,19 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
     teardown();
   });
 
-  // When showing the banner, hide the underlying container from assistive tech
+  // When showing the banner, hide the underlying app container (if present) from assistive tech,
+  // but keep the banner inside the page landmark so accessibility tools consider it contained.
   try {
-    if (target && target.setAttribute) {
-      target.setAttribute('aria-hidden', 'true');
+    const appEl = hideTarget && (hideTarget.querySelector ? (hideTarget.querySelector('#app') as HTMLElement | null) : null);
+    if (appEl && appEl.setAttribute) {
+      appEl.setAttribute('aria-hidden', 'true');
+    } else if (hideTarget && (hideTarget as HTMLElement).setAttribute) {
+      (hideTarget as HTMLElement).setAttribute('aria-hidden', 'true');
     }
-  } catch (e) { /* ignore */ }
+  } catch { /* ignore */ }
 
-  // Append banner into the provided target (usually <main>) so the dialog is inside page landmarks.
-  target.appendChild(banner);
+  // Append banner inside the landmark (hideTarget) so axe treats it as page content.
+  appendTarget.appendChild(banner);
 
   return teardown;
 }
@@ -167,14 +171,14 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
 export function initConsent(options?: { container?: HTMLElement; domain?: string }) {
   const c = readConsent();
   if (c === 'granted') {
-    loadPlausible(options?.domain);
+    // Analytics handled by Vercel in production; nothing to load client-side here.
     return;
   }
   // Defer showing banner slightly (non-blocking)
   // Use requestIdleCallback if available
   const show = () => showConsentBanner(options);
   if ('requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(show, { timeout: 2000 });
+    (window as unknown as { requestIdleCallback?: (cb: () => void, opts?: unknown) => void }).requestIdleCallback?.(show, { timeout: 2000 });
   } else {
     setTimeout(show, 1200);
   }

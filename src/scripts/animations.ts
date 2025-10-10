@@ -4,7 +4,8 @@ export async function triggerConfetti() {
   try {
     // lazy-load canvas-confetti
     const mod = await import('canvas-confetti');
-    const confetti = (mod && (mod.default || mod)) as any;
+    type ConfettiFn = (_opts: Record<string, unknown>) => void;
+    const confetti = (mod && (mod.default || mod)) as unknown as ConfettiFn;
 
     const colors = ['#e8aeb7', '#b8e1ff', '#a9fff7', '#94fbab', '#82aba1'];
 
@@ -23,9 +24,9 @@ export async function triggerConfetti() {
         colors
       });
     }, 200);
-  } catch (e) {
+  } catch {
     // graceful fallback: do nothing
-    // console.warn('Confetti failed to load', e);
+    // console.warn('Confetti failed to load');
   }
 }
 
