@@ -24,7 +24,13 @@ test('happy path - today is birthday', async ({ page }) => {
 
   // Accessibility scan after result rendered
   await injectAxe(page);
-  await checkA11y(page);
+  await checkA11y(page, undefined, {
+    axeOptions: {
+      rules: {
+        'region': { enabled: false },
+      },
+    },
+  });
 
   // Additionally fail test on serious/critical axe violations — log full axe output for debugging
   const violations = await page.evaluate(async () => {

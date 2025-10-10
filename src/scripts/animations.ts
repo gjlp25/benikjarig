@@ -4,12 +4,25 @@ export async function triggerConfetti() {
   try {
     // lazy-load canvas-confetti
     const mod = await import('canvas-confetti');
-    type ConfettiFn = (_opts: Record<string, unknown>) => void;
+    type ConfettiFn = {
+      (_opts: Record<string, unknown>): void;
+      create: (canvas: HTMLCanvasElement, opts: Record<string, unknown>) => ConfettiFn;
+    };
     const confetti = (mod && (mod.default || mod)) as unknown as ConfettiFn;
+
+    // Create a canvas that is not announced by screen readers
+    const canvas = document.createElement('canvas');
+    canvas.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(canvas);
+
+    const confettiInstance = confetti.create(canvas, {
+      resize: true,
+      useWorker: true,
+    });
 
     const colors = ['#e8aeb7', '#b8e1ff', '#a9fff7', '#94fbab', '#82aba1'];
 
-    confetti({
+    confettiInstance({
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
@@ -17,7 +30,7 @@ export async function triggerConfetti() {
     });
 
     setTimeout(() => {
-      confetti({
+      confettiInstance({
         particleCount: 50,
         spread: 60,
         origin: { y: 0.6 },
