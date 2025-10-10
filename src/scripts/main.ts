@@ -141,7 +141,6 @@ function mountApp() {
   const yearInput = qs('#year') as HTMLInputElement;
 
   // Modal root inserted inside <main> so the result appears directly after the form in DOM order
-  const mainEl = qs('main') as HTMLElement | null;
   let modalRoot = document.getElementById('modal-root') as HTMLElement | null;
   if (!modalRoot) {
     modalRoot = document.createElement('div');

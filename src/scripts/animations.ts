@@ -4,7 +4,7 @@ export async function triggerConfetti() {
   try {
     // lazy-load canvas-confetti
     const mod = await import('canvas-confetti');
-    type ConfettiFn = (opts: Record<string, unknown>) => void;
+    type ConfettiFn = (_opts: Record<string, unknown>) => void;
     const confetti = (mod && (mod.default || mod)) as unknown as ConfettiFn;
 
     const colors = ['#e8aeb7', '#b8e1ff', '#a9fff7', '#94fbab', '#82aba1'];

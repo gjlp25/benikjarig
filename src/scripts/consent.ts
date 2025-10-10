@@ -52,8 +52,7 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
   // Always prefer the explicit container passed in options, then fall back to <main>.
   // This ensures initConsent({ container: qs('main') }) reliably places the banner inside <main>.
   const hideTarget = options?.container ?? (document.querySelector('main') as HTMLElement | null) ?? document.body;
-  let appendTarget = options?.container ?? (document.querySelector('main') as HTMLElement | null) ?? document.body;
-  const domain = options?.domain ?? 'benikvandaagjarig.nl';
+  const appendTarget = options?.container ?? (document.querySelector('main') as HTMLElement | null) ?? document.body;
 
   const existing = document.getElementById('consent-banner');
   if (existing) return () => { /* no-op */ };
@@ -179,7 +178,7 @@ export function initConsent(options?: { container?: HTMLElement; domain?: string
   // Use requestIdleCallback if available
   const show = () => showConsentBanner(options);
   if ('requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(show, { timeout: 2000 });
+    (window as unknown as { requestIdleCallback?: (cb: () => void, opts?: unknown) => void }).requestIdleCallback?.(show, { timeout: 2000 });
   } else {
     setTimeout(show, 1200);
   }
