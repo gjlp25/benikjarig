@@ -311,7 +311,7 @@ function mountApp() {
       if (res.leapYearMessage) {
         modalRoot.className = 'leap-year';
         setHtml(modalRoot, `
-          <section aria-label="Resultaat" class="container-result" aria-live="polite">
+        <section class="container-result" aria-live="polite">
             <div class="result-particles" aria-hidden="true">
               <span class="p"></span><span class="p"></span><span class="p"></span>
               <span class="p"></span><span class="p"></span>
@@ -346,7 +346,7 @@ function mountApp() {
       } else if (res.isBirthday) {
         modalRoot.className = 'result birthday';
         setHtml(modalRoot, `
-          <section aria-label="Resultaat" class="container-result theme-rose" aria-live="polite">
+          <section class="container-result theme-rose" aria-live="polite">
             <div class="result-particles" aria-hidden="true">
               <span class="p"></span><span class="p"></span><span class="p"></span>
               <span class="p"></span><span class="p"></span>
@@ -388,11 +388,13 @@ function mountApp() {
       } else {
         modalRoot.className = 'result not-birthday';
         setHtml(modalRoot, `
-          <h2 id="result-heading">😔 Nee, je bent niet jarig</h2>
-          <p>Helaas! Vandaag is niet jouw verjaardag.</p>
-          <p><strong>${randomNotBirthdayMessage()}</strong></p>
-          <div class="age-display">Je bent ${res.age ?? '-'} jaar oud</div>
-          ${generateShareHtml(false)}
+          <section class="container-result" aria-labelledby="result-heading">
+            <h2 id="result-heading">😔 Nee, je bent niet jarig</h2>
+            <p>Helaas! Vandaag is niet jouw verjaardag.</p>
+            <p><strong>${randomNotBirthdayMessage()}</strong></p>
+            <div class="age-display">Je bent ${res.age ?? '-'} jaar oud</div>
+            ${generateShareHtml(false)}
+          </section>
         `);
         modalRoot.setAttribute('role', 'dialog');
         modalRoot.setAttribute('aria-modal', 'true');

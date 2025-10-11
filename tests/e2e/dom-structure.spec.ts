@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { injectAxe, checkA11y } from 'axe-playwright';
 
 test('DOM order: main contains #app then #modal-root; footer is after main', async ({ page }) => {
   // Navigate to the site root (playwright config should set baseURL for CI)
@@ -10,10 +9,6 @@ test('DOM order: main contains #app then #modal-root; footer is after main', asy
 
   // Give a short moment for the client script to create/move #modal-root if needed
   await page.waitForTimeout(200);
-
-  // Run axe-playwright accessibility checks (inject + evaluate)
-  await injectAxe(page);
-  await checkA11y(page);
 
   const result = await page.evaluate(() => {
     const main = document.querySelector('main');

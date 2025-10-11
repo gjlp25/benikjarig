@@ -60,8 +60,7 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
   // Banner markup (minimal, accessible)
   const banner = document.createElement('aside');
   banner.id = 'consent-banner';
-  banner.setAttribute('role', 'dialog');
-  banner.setAttribute('aria-modal', 'true');
+  banner.setAttribute('role', 'region');
   banner.setAttribute('aria-labelledby', 'consent-text');
   banner.style.position = 'fixed';
   banner.style.left = '1rem';
@@ -127,8 +126,6 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
         const appEl = hideTarget && (hideTarget.querySelector ? (hideTarget.querySelector('#app') as HTMLElement | null) : null);
         if (appEl && appEl.removeAttribute) {
           appEl.removeAttribute('aria-hidden');
-        } else if (hideTarget && (hideTarget as HTMLElement).removeAttribute) {
-          (hideTarget as HTMLElement).removeAttribute('aria-hidden');
         }
       } catch { /* ignore */ }
     } catch { /* ignore */ }
@@ -146,19 +143,27 @@ export function showConsentBanner(options?: { container?: HTMLElement; domain?: 
     teardown();
   });
 
-  // When showing the banner, hide the underlying app container (if present) from assistive tech,
-  // but keep the banner inside the page landmark so accessibility tools consider it contained.
+  // When showing the banner, hide the underlying app container (if present) from assistive tech.
+  // Insert the banner as a *sibling* of #app (when possible) so the banner itself is not inside
+  // an aria-hidden container — this prevents axe 'aria-hidden-focus' violations.
   try {
     const appEl = hideTarget && (hideTarget.querySelector ? (hideTarget.querySelector('#app') as HTMLElement | null) : null);
     if (appEl && appEl.setAttribute) {
       appEl.setAttribute('aria-hidden', 'true');
-    } else if (hideTarget && (hideTarget as HTMLElement).setAttribute) {
-      (hideTarget as HTMLElement).setAttribute('aria-hidden', 'true');
+      // Insert banner after the app element as a sibling to avoid placing focusable elements
+      // inside an aria-hidden parent.
+      if (appEl.parentNode) {
+        appEl.parentNode.insertBefore(banner, appEl.nextSibling);
+      } else {
+        appendTarget.appendChild(banner);
+      }
+    } else {
+      // Fall back to appending to the provided appendTarget without setting aria-hidden on the
+      // container itself — setting aria-hidden on large page landmarks can make interactive
+      // controls focusable inside aria-hidden regions and trigger axe 'aria-hidden-focus'.
+      appendTarget.appendChild(banner);
     }
   } catch { /* ignore */ }
-
-  // Append banner inside the landmark (hideTarget) so axe treats it as page content.
-  appendTarget.appendChild(banner);
 
   return teardown;
 }
