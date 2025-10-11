@@ -1,6 +1,6 @@
 # progress.md — benikvandaagjarig.nl
 
-## Statusoverzicht (bijgewerkt 2025-10-10)
+## Statusoverzicht (bijgewerkt 2025-10-11)
 
 ### Wat werkt al
 - ✅ Prototype in index.html: complete celebratie flow, leap year handling, leeftijdsberekening
@@ -18,6 +18,7 @@
 - ✅ Layout fixes toegepast (DOM-order, modal-root, footer placement)
 
 ### Nieuw toegevoegde functionaliteit (recent)
+- ✅ **CI Workflow Hardened**: `continue-on-error` is verwijderd, waardoor de CI-pijplijn nu faalt bij testfouten.
 - ✅ **Test Suite Refactor**: DOM-structuur en accessibility tests zijn nu gescheiden (`dom-structure.spec.ts` en `accessibility.spec.ts`).
 - ✅ **Accessibility Fixes**: Alle bekende `axe` violations (`region`, `aria-allowed-role`, `aria-hidden-focus`) zijn opgelost.
 - ✅ Docker: toegevoegd `Dockerfile`, `.dockerignore`, `nginx.conf` en `docker-compose.yml` voor lokale/container deployment testing.
@@ -28,7 +29,6 @@
 - ✅ Security hardening: `vercel.json` CSP opgeschoond.
 
 ### Wat moet nog gebouwd / verbeterd worden
-- [ ] **(Aanbevolen)** Verwijder `continue-on-error: true` uit `.github/workflows/ci.yml` nu alle tests slagen.
 - [ ] Optioneel: verwijder 'unsafe-inline' uit CSP door inline scripts naar externe bestanden te verplaatsen en CSP hashes te gebruiken.
 - [ ] (Optioneel) Extract messages naar een aparte i18n / messages module voor makkelijker beheer en vertalingen.
 - [ ] (Optioneel) Voeg unit test voor random message selection (Vitest) om valid index selection te valideren.
@@ -38,11 +38,12 @@
 
 ### Volgende korte termijn stappen (aanbevolen)
 1. **Commit en push** alle recente fixes naar de `dev` branch.
-2. **Verwijder `continue-on-error: true`** uit de CI-workflow.
-3. Review `DEPLOYMENT.md` en de launch checklist in `projectbrief.md`.
-4. Merge `dev` naar `main` om de site te publiceren.
+2. Review `DEPLOYMENT.md` en de launch checklist in `projectbrief.md`.
+3. Merge `dev` naar `main` om de site te publiceren.
 
 ### Change log (recent)
+- 2025-10-11 — CI Hardening:
+  - Removed `continue-on-error` from the CI workflow to ensure build failures on test errors.
 - 2025-10-10 — E2E Test & Accessibility Fixes:
   - Refactored E2E tests into separate DOM structure and accessibility suites.
   - Fixed all outstanding `axe` accessibility violations (`region`, `aria-allowed-role`, `aria-hidden-focus`).
@@ -59,6 +60,7 @@
 ---
 
 ### Memory Bank — Update log
+- 2025-10-11 — Memory bank updated: CI workflow hardened. Project is production-ready.
 - 2025-10-10 — Memory bank updated: E2E test suite refactored and all accessibility violations fixed. Project is now ready for final review and deployment.
 - 2025-10-08 — Memory bank updated: added infra/deployment docs, security hardening, privacy update, randomized messages, and generated share-preview assets.
 - 2025-10-04 — Memory bank reviewed and validated (no functional regressions).
