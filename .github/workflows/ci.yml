@@ -44,27 +44,10 @@ jobs:
       - name: Run Playwright E2E (Chromium)
         run: npx playwright test --project=chromium --reporter=list
 
-      - name: Collect Playwright report & visual artifacts
+      - name: Upload test artifacts
         if: always()
-        run: |
-          mkdir -p test-results/playwright-report || true
-          if [ -d playwright-report ]; then cp -r playwright-report test-results/playwright-report; fi
-          if [ -d test-results ]; then mkdir -p test-results/visual || true; fi
-          # copy any visual diffs or snapshot reports if Playwright produced them
-          if [ -d test-results/playwright ]; then cp -r test-results/playwright test-results/visual || true; fi
-          if [ -d tests/e2e/__snapshots__ ]; then cp -r tests/e2e/__snapshots__ test-results/visual/snapshots || true; fi
-
-      - name: Upload visual artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: visual-artifacts
-          path: |
-            test-results/playwright-report
-            test-results/visual
-            tests/e2e/__snapshots__
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: test-results
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
