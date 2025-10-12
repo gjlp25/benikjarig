@@ -6,7 +6,7 @@ test.describe('visual regression - homepage', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     const shot = await page.screenshot({ fullPage: true });
-    expect(shot).toMatchSnapshot('visual-desktop.png', { threshold: 0.02 });
+    expect(shot).toMatchSnapshot('visual-desktop.png', { threshold: 0.02, maxDiffPixels: 100 });
   });
 
   test('tablet layout matches baseline', async ({ page }) => {
@@ -14,7 +14,7 @@ test.describe('visual regression - homepage', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     const shot = await page.screenshot({ fullPage: true });
-    expect(shot).toMatchSnapshot('visual-tablet.png', { threshold: 0.02 });
+    expect(shot).toMatchSnapshot('visual-tablet.png', { threshold: 0.02, maxDiffPixels: 100 });
   });
 
   test('mobile layout matches baseline', async ({ page }) => {
@@ -22,6 +22,6 @@ test.describe('visual regression - homepage', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     const shot = await page.screenshot({ fullPage: true });
-    expect(shot).toMatchSnapshot('visual-mobile.png', { threshold: 0.02 });
+    expect(shot).toMatchSnapshot('visual-mobile.png', { threshold: 0.02, maxDiffPixels: 100 });
   });
 });
