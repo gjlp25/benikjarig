@@ -5,9 +5,20 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runner
     image: benikvandaagjarig:local
     ports:
       - "8080:80"
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: tail -f /dev/null # Keep container running
