@@ -39,10 +39,9 @@ jobs:
 
       - name: Run Playwright Tests
         run: npx playwright test
-        continue-on-error: true
 
       - name: Upload Playwright report
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report

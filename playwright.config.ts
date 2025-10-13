@@ -8,7 +8,7 @@ export default defineConfig({
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  reporter: [['html', { open: 'never' }]],
+  reporter: process.env.CI ? 'dot' : 'list',
   use: {
     baseURL: 'http://localhost:5173',
     headless: true,
