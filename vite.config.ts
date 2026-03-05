@@ -11,8 +11,8 @@ export default defineConfig({
     chunkSizeWarningLimit: 50,
     rollupOptions: {
       input: {
-        main: 'src/index.html',
-        privacy: 'src/privacy.html'
+        main: 'index.html',
+        privacy: 'privacy.html'
       }
     }
   },

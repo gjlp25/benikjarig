@@ -19,6 +19,12 @@ services:
       dockerfile: Dockerfile
       target: builder
     volumes:
-      - .:/app
-      - /app/node_modules
-    command: tail -f /dev/null # Keep container running
+      - .:/app:ro
+    command: npm run test
+    depends_on:
+      - web
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
