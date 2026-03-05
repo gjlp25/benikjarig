@@ -113,7 +113,8 @@ function appendFooter() {
   footer.className = 'site-footer';
   footer.innerHTML = `
     <div class="footer-inner">
-      <p>© 2025 benikvandaagjarig.nl<br/>Gemaakt door Robert Postma<br/>Contact: info@benikvandaagjarig.nl</p>
+      <img src="/logo.png" alt="Ben ik vandaag jarig logo" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:8px;" aria-hidden="true" />
+      <p style="display:inline-block;vertical-align:middle;margin:0;">© 2025 benikvandaagjarig.nl<br/>Gemaakt door Robert Postma<br/>Contact: info@benikvandaagjarig.nl</p>
       <p class="muted">Laatste update: ${__BUILD_DATE__}<br/><a href="/privacy.html">Privacyverklaring</a></p>
       <p style="margin-top:8px;"><a href="#" id="withdraw-consent" class="muted">Verwijder toestemming</a></p>
     </div>
