@@ -2,7 +2,7 @@ import { createEl, setHtml, on, qs } from '../utils/dom-helpers';
 import { validateInput, evaluateBirthday } from './birthday-logic';
 import { triggerConfetti } from './animations';
 import { generateShareHtml, shouldUseWebShare, sharePayload } from './sharing';
-import { initConsent } from './consent';
+import { initConsent, withdrawConsent } from './consent';
 
 const NOT_BIRTHDAY_MESSAGES = [
   'Aan het werk!',
@@ -115,6 +115,7 @@ function appendFooter() {
     <div class="footer-inner">
       <p>© 2025 benikvandaagjarig.nl<br/>Gemaakt door Robert Postma<br/>Contact: info@benikvandaagjarig.nl</p>
       <p class="muted">Laatste update: september 2025<br/><a href="/privacy.html">Privacyverklaring</a></p>
+      <p style="margin-top:8px;"><a href="#" id="withdraw-consent" class="muted">Verwijder toestemming</a></p>
     </div>
   `;
   // Insert footer directly after <main> so it stays outside the content containers
@@ -124,6 +125,26 @@ function appendFooter() {
   } else {
     const host = (qs('#app') as HTMLElement | null) ?? document.body;
     (host as HTMLElement).appendChild(footer);
+  }
+
+  // Wire withdraw consent link (best-effort)
+  try {
+    const withdraw = footer.querySelector('#withdraw-consent') as HTMLAnchorElement | null;
+    if (withdraw) {
+      withdraw.addEventListener('click', (e) => {
+        e.preventDefault();
+        try {
+          withdrawConsent({ container: qs('main') as HTMLElement });
+          // Provide a brief confirmation to the user
+          // Use alert for simplicity; can be replaced with a nicer UI later
+          alert('Je toestemming is verwijderd. De consent-banner wordt opnieuw getoond.');
+        } catch {
+          // ignore
+        }
+      });
+    }
+  } catch {
+    // ignore
   }
 }
 

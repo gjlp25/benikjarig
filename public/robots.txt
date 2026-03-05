@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://benikvandaagjarig.nl/sitemap.xml

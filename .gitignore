@@ -1,1 +1,41 @@
+<<<<<<< HEAD
 node_modules
+=======
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build output
+dist/
+.vite/
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Tests / artifacts
+test-results/
+playwright-report/
+
+# Backups and archives (do not commit local snapshots)
+backup/
+backup/**
+
+# Logs
+logs/
+*.log
+
+# Misc
+*.tgz
+>>>>>>> origin/dev

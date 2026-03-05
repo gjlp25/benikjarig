@@ -243,4 +243,37 @@ From your workstation (server reachable via SSH):
 
 ---
 
+## 16 — Running tests locally
+
+Use these commands to run unit and E2E tests on your workstation.
+
+1) Install dependencies
+```bash
+npm ci
+```
+
+2) Unit tests (Vitest)
+```bash
+npm run test
+```
+
+3) Playwright (E2E) — install browsers once per machine
+```bash
+npx playwright install
+npm run test:e2e
+```
+
+Notes:
+- Playwright needs browser binaries; run `npx playwright install` once after installing deps.
+- If you prefer containerized E2E tests, use docker-compose:
+```bash
+docker compose build
+docker compose run --rm tests npx playwright test
+```
+This runs the same tests inside the project's test container.
+
+4) Troubleshooting
+- If Playwright complains about missing browsers, re-run `npx playwright install`.
+- For flaky tests, run with retries or view screenshots/report in `playwright-report/`.
+
 End of guide.

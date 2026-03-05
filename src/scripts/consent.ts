@@ -195,3 +195,17 @@ export function initConsent(options?: { container?: HTMLElement; domain?: string
 export function _clearConsentForTests() {
   writeConsent(null);
 }
+
+/**
+ * Withdraw previously granted consent and show the consent banner again.
+ * Optionally pass { container } to place the banner in the same container.
+ */
+export function withdrawConsent(options?: { container?: HTMLElement }) {
+  writeConsent(null);
+  // Re-display the consent banner so the user can choose again.
+  try {
+    showConsentBanner(options as any);
+  } catch {
+    // best-effort; if banner cannot be shown, do nothing
+  }
+}

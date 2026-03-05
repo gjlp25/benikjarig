@@ -13,6 +13,13 @@ export async function triggerConfetti() {
     // Create a canvas that is not announced by screen readers
     const canvas = document.createElement('canvas');
     canvas.setAttribute('aria-hidden', 'true');
+    // ensure canvas doesn't interfere with layout or a11y
+    canvas.style.position = 'fixed';
+    canvas.style.left = '0';
+    canvas.style.top = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
     document.body.appendChild(canvas);
 
     const confettiInstance = confetti.create(canvas, {
@@ -37,6 +44,17 @@ export async function triggerConfetti() {
         colors
       });
     }, 200);
+
+    // Cleanup the canvas element after animations finish (best-effort)
+    // canvas-confetti uses requestAnimationFrame/worker; removing the element is safe.
+    const cleanupMs = 5000;
+    setTimeout(() => {
+      try {
+        if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+      } catch {
+        // ignore
+      }
+    }, cleanupMs);
   } catch {
     // graceful fallback: do nothing
     // console.warn('Confetti failed to load');
