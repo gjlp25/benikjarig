@@ -21,4 +21,16 @@ describe('shouldUseWebShare', () => {
     vi.unstubAllGlobals();
     expect(shouldUseWebShare('desktop')).toBe(false);
   });
+
+  test('handles navigator.share throwing (AbortError) gracefully', async () => {
+    const fakeShare = vi.fn().mockRejectedValue(new Error('AbortError'));
+    vi.stubGlobal('navigator', { userAgent: 'Desktop', share: fakeShare } as unknown as Navigator);
+
+    const { openShareDialog } = await import('../scripts/sharing');
+    // call the function and ensure it does not throw synchronously
+    openShareDialog(true);
+    // allow any microtasks to run
+    await Promise.resolve();
+    expect(fakeShare).toHaveBeenCalled();
+  });
 });
