@@ -1,37 +1,11 @@
 # systemPatterns.md — benikvandaagjarig.nl
 
-## Architectuur
+## Architectuur (updates)
 
-- **Client-side only:** Alle logica draait in de browser, geen backend of data-opslag.
-- **Modulair ontwerp:** Code wordt opgesplitst in logische modules (birthday-logic, animations, sharing, utils).
-- **Strict TypeScript:** Type safety en duidelijke interfaces voor alle modules.
-- **Performance-first:** Lazy loading van confetti, animaties via GPU-geoptimaliseerde CSS keyframes.
-- **Accessibility:** Semantische HTML, ARIA-labels, AA-contrast, volledige toetsenbordbediening, screenreader support.
+- Build-time metadata: gebruik Vite `define` om kleine build-metadata (zoals `__BUILD_DATE__`) te injecteren tijdens build. Dit is nu een standaard pattern in het project voor niet-gevoelige, display-only metadata.
+- CSP as code: beveiligingsheaders (CSP, HSTS, X-Frame-Options, etc.) worden beheerd via `vercel.json` en dienen als single source of truth voor edge headers.
+- Assets in public/: statische assets (OG images, favicons, logo's) worden in `public/` geplaatst en niet automatisch in HTML opgenomen — dit biedt flexibiliteit zonder layout-veranderingen.
 
-## Design Patterns
-
-- **ES Modules:** Consistente imports en exports, duidelijke function signatures.
-- **Custom Properties:** CSS-variabelen voor kleuren, spacing en animaties.
-- **Event-driven UI:** Interacties via event listeners, geen globale state buiten modulegrenzen.
-- **Feature toggles:** Animaties en geluid respecteren `prefers-reduced-motion` en autoplay policies.
-- **Fallbacks:** Web Share API met fallback naar platform-URL's; confetti/ballonnen gracefully degraded bij failure.
-
-## Component Relaties
-
-- **birthday-logic.ts:** Verwerkt datuminput, leap year checks, leeftijdsberekening.
-- **animations.ts:** Regelt confetti, ballonnen, geluidseffecten.
-- **sharing.ts:** Handelt social sharing en OG-image logica.
-- **main.ts:** Initialiseert app, koppelt modules en UI.
-- **utils/date-helpers.ts:** Datumvalidatie, schrikkeljaarlogica.
-- **utils/dom-helpers.ts:** DOM-manipulatie, focus states, accessibility helpers.
-
-## Security Patterns
-
-- **CSP & headers:** Strakke Content Security Policy, HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, X-Frame-Options.
-- **GDPR:** Geen opslag van geboortedata, analytics/ads pas na consent, cookieloze tracking.
-
-## Test Patterns
-
-- **Vitest:** Unit tests voor logica en edge cases.
-- **Playwright:** E2E tests voor user flows.
-- **axe-core:** Accessibility checks op critical flows.
+## Design & Security Patterns (herhaling)
+- ES Modules, feature toggles, accessibility-first en performance-first blijven leidend.
+- Prefer build-time injection voor niet-dynamische metadata i.p.v. handmatige updates in HTML.

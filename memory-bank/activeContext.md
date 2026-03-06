@@ -1,24 +1,27 @@
 # activeContext.md — benikvandaagjarig.nl
 
-## Laatste status (geüpdatet 2025-10-15)
+## Laatste status (geüpdatet 2026-03-06)
 
 Kort overzicht van recente acties:
-- **CI/CD & Docker Fixes**: A long and difficult troubleshooting session was completed to stabilize the CI pipeline.
-  - The visual regression tests (`visual.spec.ts`) were too brittle and have been **disabled** in the CI workflow using `--grep-invert`. This was the final solution to ensure a stable build.
-  - The project now uses Docker for testing. The `.github/workflows/ci.yml` and `docker-compose.yml` files were updated to run tests in a consistent containerized environment.
-  - The `docker-compose` command was updated to the modern `docker compose` syntax in the CI workflow.
-  - The `docker-compose.yml` was corrected to handle `node_modules` volume mounting issues.
+- Build-time injectie toegevoegd: Vite define __BUILD_DATE__ (vite.config.ts) en TypeScript-declaratie (src/types/env.d.ts).
+- Security headers aangescherpt in vercel.json: striktere CSP (geen 'unsafe-inline'), beperkter img-src, uitgebreid Permissions-Policy en Cache-Control voor HTML.
+- Privacyverklaring bijgewerkt (src/privacy.html) — tekst geactualiseerd en datum aangepast naar 2026-03-05.
+- Sharing: Twitter/X share-URL aangepast naar x.com (src/scripts/sharing.ts).
+- Favicon/logo: assets toegevoegd aan public/ (favicon.png, logo.png) maar uiteindelijk niet geactiveerd in HTML (wijziging in index.html en footer teruggedraaid).
+- Kleine UI cleanup: footer-logo verwijderd en favicon-links uit index.html verwijderd per gebruikersverzoek.
+- Alle codewijzigingen gecommit en gepusht naar main.
 
 ## Wat werkt nu
-- **The CI pipeline is now stable.** All checks pass, with the exception of the disabled visual regression tests.
-- The Docker setup is configured for both local development/testing and for use in the CI pipeline.
-- All other functionality remains as it was, with all unit and E2E tests (excluding visual) passing.
+- Build-time metadata wordt automatisch ingesloten in builds.
+- Strakke security headers zijn aanwezig voor hosting op Vercel.
+- Consent flow en privacy-tekst zijn up-to-date en documenteert dat er geen persoonlijke gegevens worden opgeslagen.
+- Social sharing werkt zoals bedoeld, inclusief Web Share API fallback en X/twitter URL correct.
 
 ## Openstaande taken (prioriteit)
-1.  **Commit & Push**: Commit all the recent CI/CD and Docker fixes to the `dev` branch.
-2.  **Final Review**: Voer een laatste controle uit van de `DEPLOYMENT.md` en de launch checklist in `projectbrief.md`.
-3.  **Deploy**: Merge `dev` naar `main` om de publicatie te starten.
+1. Verifieer headers en CSP na deploy (SecurityHeaders.io / Mozilla Observatory).
+2. Controleer OG API (api/og) onder strengere CSP en pas indien nodig bronnen toe.
+3. (Optioneel) Verwijder ongebruikte assets uit public/ als je ze niet wilt bewaren.
 
 ## Beslissingen / overwegingen
-- The visual regression tests are disabled for now to unblock development and deployment. They can be revisited in the future if a more robust cross-platform solution is desired, but for now, stability is the priority.
-- The project is now fully "production-ready" from a CI/CD perspective.
+- We bewaren `favicon.png` en `logo.png` in `public/` als assets voor later gebruik, maar houden de live HTML schoon totdat je expliciet wil activeren.
+- Vercel blijft de aanbevolen hostingoptie.
