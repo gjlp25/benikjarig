@@ -206,6 +206,48 @@ input:focus {
 .twitter { background: #1da1f2; color: white; }
 .linkedin { background: #0077b5; color: white; }
 
+/* Affiliate cards grid */
+.affiliate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.affiliate-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0.75rem;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  text-decoration: none;
+  color: #0f172a;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+.affiliate-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.affiliate-emoji { font-size: 1.75rem; margin-bottom: 0.4rem; }
+.affiliate-label { font-weight: 600; font-size: 0.875rem; text-align: center; }
+.affiliate-sub   { font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 0.2rem; }
+
+/* Download button styling (matches share button system) */
+.share-btn.download {
+  background: linear-gradient(135deg, rgba(0,0,0,0.08), rgba(0,0,0,0.04));
+  color: inherit;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.share-btn.download:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
 /* Leap year message & age */
 .leap-year-message {
   background: linear-gradient(135deg, var(--light-green), var(--ice-blue));
@@ -409,6 +451,28 @@ input:focus {
 }
 .container-result.theme-rose::before{ top:14px; right:14px; }
 .container-result.theme-rose::after{ bottom:14px; left:14px; animation-delay:.9s; }
+
+/* LICHT BLAUW THEMA voor 'Nee' resultaat — licht en toegankelijk */
+.container-result.theme-blue{
+  /* zachte lichtblauwe gradient, hoge contrastkleur voor tekst */
+  background: radial-gradient(800px 600px at 10% -10%, rgba(255,255,255,0.6), transparent 50%),
+              linear-gradient(180deg, rgba(178,225,255,0.9) 0%, rgba(169,255,247,0.85) 100%);
+  color: #0f172a;
+}
+.container-result.theme-blue::before,
+.container-result.theme-blue::after{
+  position:absolute;
+  inset:auto;
+  pointer-events:none;
+  opacity:.18;
+  font-size:14px;
+  content: '';
+}
+.container-result.theme-blue::before{ top:8px; right:8px; width:40px; height:6px; background:linear-gradient(90deg,var(--uranian-blue),var(--ice-blue)); border-radius:6px; }
+.container-result.theme-blue::after{ bottom:8px; left:8px; width:36px; height:6px; background:linear-gradient(90deg,var(--ice-blue),var(--light-green)); border-radius:6px; }
+
+/* kleine partiële subtiele deeltjes voor dynamiek (geen contrastimpact) */
+.container-result.theme-blue .result-particles .p{ background: rgba(255,255,255,0.6); }
 
 /* Typografie */
 .result-title{ font-size:clamp(26px,4.2vw,36px); font-weight:800; margin:0 0 12px; line-height:1.2; }

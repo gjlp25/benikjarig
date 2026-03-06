@@ -17,6 +17,8 @@ build
 # Tests & snapshots
 tests/e2e/__snapshots__
 test-results
++vite.config.js
++*.log
 coverage
 
 # Git

@@ -96,6 +96,31 @@ export function generateShareHtml(isBday: boolean) {
       <a href="${twitter}" data-platform="twitter" class="share-btn twitter" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
       <a href="${linkedin}" data-platform="linkedin" class="share-btn linkedin" target="_blank" rel="noopener noreferrer">💼 LinkedIn</a>
       ${nativeButton}
+      <button class="share-btn download" data-action="download" aria-label="Bewaar als afbeelding">🖼️ Bewaar als afbeelding</button>
     </div>
   `;
+}
+
+export async function downloadResultCard(): Promise<void> {
+  try {
+    const { default: html2canvas } = await import('html2canvas');
+    const card = document.querySelector('.container-result') as HTMLElement | null;
+    if (!card) return;
+
+    const canvas = await html2canvas(card, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: null
+    });
+
+    const link = document.createElement('a');
+    link.download = `benikvandaagjarig-${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    // Append/link click and remove to trigger download reliably
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch {
+    // graceful fallback: ignore
+  }
 }

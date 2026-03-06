@@ -1,0 +1,97 @@
+{
+  "nee_teksten": [
+    "Aan het werk!",
+    "Nog 364 dagen te gaan… 💪",
+    "Trakteer jezelf dan maar op koffie ☕",
+    "Geen taart vandaag, alleen spreadsheets 🍰➡️📄",
+    "Je baas wacht! 😏",
+    "Ach joh, iedere dag is een feestje 🎉 (behalve vandaag).",
+    "Probeer het morgen nog eens 🤷‍♂️",
+    "Niet jarig, wél bijzonder ❤️",
+    "Jarig? Nee. Productief? Hopelijk wel.",
+    "Sorry, geen confetti — alleen deadlines 🎯",
+    "Je kunt nog altijd doen alsof. Niemand merkt het.",
+    "Taartloos, maar niet waardeloos 🍰❌",
+    "Vier vandaag dat je níet oud wordt! 🧓➡️🚫",
+    "De hamster van iemand anders is misschien wel jarig 🐹🎈",
+    "Je hebt geen reden voor taart, maar wel voor koffie.",
+    "Geen feestje, wel facturen. 🧾",
+    "Toch maar een toetje nemen vanavond? 🥧",
+    "Nog even volhouden… je moment komt eraan.",
+    "Het is vast iemands verjaardag — gewoon niet de jouwe.",
+    "Geen verjaardagskaarsjes, wel gaslicht van de energierekening 🕯️💸",
+    "Trakteer je collega’s dan maar op je glimlach 🙂",
+    "De wereld draait door. Jij ook vandaag.",
+    "Geen taart, maar wel een stukje realiteit 🍽️",
+    "Iedere dag is een cadeautje 🎁 (sommige alleen wat minder leuk ingepakt).",
+    "Misschien ben je op een andere planeet wél jarig. 🚀",
+    "Gefeliciteerd met… dinsdag.",
+    "Vandaag geen feest, wel verse kansen 🌱",
+    "Geen verjaardagskaarsjes, maar wel een browser-tabje meer.",
+    "Jarig in je hart telt ook, toch? 💖",
+    "Tijd om iets nuttigs te doen. Of Netflix. Jij beslist."
+  ],
+  "ja_teksten": [
+    "Happy Birthday! 🥳",
+    "Gefeliciteerd met het ouder worden — alweer! 🎈",
+    "Tijd voor taart, drama en aandacht 🍰✨",
+    "Vandaag mág alles (behalve volwassen doen) 😜",
+    "Nog één dag dichter bij korting op de bus 🚌🎉",
+    "Je bent officieel vintage 👴👵",
+    "Vier het alsof je geen verplichtingen hebt 🎊",
+    "Eén dag per jaar dat je legaal mag glimmen 🌟",
+    "Je innerlijke kind heeft vandaag vrijaf 👶🎂",
+    "Kaarsjes uitblazen, wensen aanzetten 💫",
+    "Gefeliciteerd! Je respawn was succesvol 🕹️",
+    "Nog één rondje om de zon overleefd ☀️👏",
+    "Tijd om de realiteit te negeren en taart te eten 🍰",
+    "Maak van vandaag een “sorry ik ben jarig”-dag 🙃",
+    "Hoera! Weer een jaartje dichter bij pensioen 🎉",
+    "De wereld is vandaag officieel een stukje ouder. En jij dus ook. 🌍",
+    "Je bent niet oud, je bent goed gerijpt 🍷",
+    "Vandaag hoef je niks te doen — behalve genieten (en eten) 😋",
+    "Gefeliciteerd, legende! 🏆",
+    "Doe alsof je verrast bent 🎁😅",
+    "Tijd om je innerlijke diva los te laten 💅",
+    "Vandaag mag je alles bestellen met “want ik ben jarig” 🍕🍾",
+    "Vier het groot! (Of klein. Je browser weet het niet.)",
+    "Jij verdient confetti. Veel confetti. 🎊",
+    "Nog even en je krijgt een lifetime achievement award 🎖️"
+  ],
+  "affiliate_ja": [
+    {
+      "emoji": "🎁",
+      "label": "Trakteer jezelf",
+      "sub": "Gepersonaliseerde cadeaus",
+      "url": "https://yoursurprise.nl/?utm_source=bivj"
+    },
+    {
+      "emoji": "🎂",
+      "label": "Taart bestellen",
+      "sub": "Bezorging vandaag mogelijk",
+      "url": "https://greetz.nl/taart?utm_source=bivj"
+    },
+    {
+      "emoji": "🎉",
+      "label": "Versiering kopen",
+      "sub": "Feestartikelen",
+      "url": "https://bol.com/feest?utm_source=bivj"
+    }
+  ],
+  "affiliate_nee": [
+    {
+      "emoji": "💝",
+      "label": "Iemand anders jarig?",
+      "sub": "Bekijk cadeautips",
+      "url": "https://bol.com/cadeaus?utm_source=bivj"
+    },
+    {
+      "emoji": "📬",
+      "label": "Stuur een kaartje",
+      "sub": "Al over {dagen} dagen ben jij jarig",
+      "url": "https://greetz.nl/kaarten?utm_source=bivj"
+    }
+  ],
+  "og_description": "Ben jij vandaag jarig? Check het officieel op benikvandaagjarig.nl",
+  "_meta": { "updated": "2026-03-06", "version": "1.0" }
+}

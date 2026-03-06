@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   root: 'src',
+  publicDir: '../public',
   build: {
     outDir: '../dist',
     emptyOutDir: true,
@@ -11,8 +12,8 @@ export default defineConfig({
     chunkSizeWarningLimit: 50,
     rollupOptions: {
       input: {
-        main: 'src/index.html',
-        privacy: 'src/privacy.html'
+        main: 'index.html',
+        privacy: 'privacy.html'
       }
     }
   },

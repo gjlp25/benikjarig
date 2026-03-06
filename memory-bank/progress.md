@@ -10,6 +10,10 @@
 - ✅ Tijdelijke favicon/logo-assets toegevoegd aan `public/` (niet geactiveerd in HTML).
 - ✅ Revert: favicon-links en footer-logo verwijderd uit HTML per gebruikersverzoek.
 - ✅ Alle wijzigingen gecommit en naar `main` gepusht.
+- ✅ publicDir toegevoegd aan `vite.config.ts` zodat `/config/content.json` vanuit `public/` wordt geserveerd tijdens development.
+- ✅ Affiliate-kaarten functionaliteit geïmplementeerd en gerenderd binnen de resultaatkaart (src/scripts/main.ts + src/styles/main.css).
+- ✅ Download van resultaatcard toegevoegd (lazy-load html2canvas, src/scripts/sharing.ts) en getest in dev.
+- ✅ Tijdelijke debug-logs verwijderd uit src/scripts/main.ts na verificatie.
 
 ### Tests & verificatie
 - Aanbevolen: draai de volledige build en run de tests lokaal:
