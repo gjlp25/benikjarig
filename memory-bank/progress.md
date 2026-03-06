@@ -1,39 +1,31 @@
 # progress.md — benikvandaagjarig.nl
 
-## Statusoverzicht (bijgewerkt 2026-03-05)
+## Statusoverzicht (bijgewerkt 2026-03-06)
 
 ### Recent afgeronde taken
-- ✅ Root `index.html` gearchiveerd naar `backup/root-index-archive-2026-03-05/index.html`
-- ✅ `robots.txt` toegevoegd in `public/`
-- ✅ `sitemap.xml` toegevoegd in `public/`
-- ✅ CSP `img-src` aangescherpt in `vercel.json`
-- ✅ GDPR: `withdrawConsent()` toegevoegd en footer-link "Verwijder toestemming" geïmplementeerd
-- ✅ Confetti canvas cleanup toegevoegd (canvas verwijderd na animatie)
-- ✅ Vite build checks toegevoegd (reportCompressedSize, chunkSizeWarningLimit)
-- ✅ Visual-regression tests aangepast: worden alleen uitgevoerd op CI/Linux of expliciet Linux-dev
-- ✅ `.gitignore` bijgewerkt om `backup/` uit te sluiten
-- ✅ `theme-color` meta toegevoegd in `src/index.html`
-- ✅ `dom-helpers.ts` verbeterd met null-checks en veilige API
-- ✅ `sharing` unit-test uitgebreid met scenario waar `navigator.share` faalt
-- ✅ `vite.config.ts` toegevoegd (migratie van JS-config)
-- ✅ Lighthouse CI config (`lighthouserc.json`) toegevoegd
+- ✅ Injectie van build-datum via `__BUILD_DATE__` (vite.config.ts + src/types/env.d.ts).
+- ✅ Strengere security headers toegevoegd in `vercel.json` (CSP, Permissions-Policy, HSTS, Cache-Control voor HTML).
+- ✅ Privacyverklaring geactualiseerd (tekst + datum).
+- ✅ Twitter → X share-URL bijgewerkt (src/scripts/sharing.ts).
+- ✅ Tijdelijke favicon/logo-assets toegevoegd aan `public/` (niet geactiveerd in HTML).
+- ✅ Revert: favicon-links en footer-logo verwijderd uit HTML per gebruikersverzoek.
+- ✅ Alle wijzigingen gecommit en naar `main` gepusht.
 
 ### Tests & verificatie
-- Unit tests (Vitest) en E2E (Playwright) blijven de primaire verificatie.
-- Visual tests zijn geprepareerd om in een containerized Linux-omgeving (CI/Docker) betrouwbare resultaten te geven.
-- Aanbevolen: voer visual tests binnen Docker om platform-artefacten verder te minimaliseren.
+- Aanbevolen: draai de volledige build en run de tests lokaal:
+  - npm ci
+  - npm run build
+  - npx playwright install
+  - npm run test
+  - npm run test:e2e (optioneel in Docker)
+- Voer een security scan (Mozilla Observatory / SecurityHeaders.io) na deploy.
 
 ### Openstaande (optioneel / lage inspanning)
-- Privacy stylesheet pipeline: de huidige `src/privacy.html` gebruikt `./styles/privacy.css` en wordt door Vite opgenomen tijdens build — geen actie strikt vereist.
-- Memory bank verdere updates (dit document is geüpdatet).
-- Overige optionele verbeteringen: Lighthouse runner in CI integreren (Action), extra tests voor sharing fallbacks, of UI polish.
+- Verwijder of archiveer ongebruikte bestanden in `public/` als je ze niet wilt bewaren.
+- Voeg CSP-reporting toe (report-to/report-uri) voor monitoring.
+- Integreer Lighthouse CI in de CI workflow.
 
 ### Volgende aanbevolen stappen
-1. Run full build & test locally:
-   - npm ci
-   - npm run build
-   - npx playwright install
-   - npm run test
-   - npm run test:e2e (optioneel inside docker-compose for parity)
-2. Run Lighthouse CI in CI pipeline (add GH Action using lighthouserc.json).
-3. Review backup files and remove any stale artifacts not needed in repo.
+1. Deploy naar Vercel en verifieer headers.
+2. Test OG-image API onder de stricte CSP.
+3. Beslis of `public/favicon.png` en `public/logo.png` moeten blijven of verwijderd.

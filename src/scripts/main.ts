@@ -114,7 +114,7 @@ function appendFooter() {
   footer.innerHTML = `
     <div class="footer-inner">
       <p>© 2025 benikvandaagjarig.nl<br/>Gemaakt door Robert Postma<br/>Contact: info@benikvandaagjarig.nl</p>
-      <p class="muted">Laatste update: september 2025<br/><a href="/privacy.html">Privacyverklaring</a></p>
+      <p class="muted">Laatste update: ${__BUILD_DATE__}<br/><a href="/privacy.html">Privacyverklaring</a></p>
       <p style="margin-top:8px;"><a href="#" id="withdraw-consent" class="muted">Verwijder toestemming</a></p>
     </div>
   `;

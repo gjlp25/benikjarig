@@ -62,7 +62,7 @@ export function openShareDialog(isBday: boolean) {
   const encoded = encodeURIComponent(text);
   const whatsapp = `https://wa.me/?text=${encoded}%20${encodeURIComponent(url)}`;
   const facebook = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-  const twitter = `https://twitter.com/intent/tweet?text=${encoded}&url=${encodeURIComponent(url)}`;
+  const twitter = `https://x.com/intent/tweet?text=${encoded}&url=${encodeURIComponent(url)}`;
   const linkedin = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
 
   return { whatsapp, facebook, twitter, linkedin };
@@ -80,7 +80,7 @@ export function generateShareHtml(isBday: boolean) {
   const url = shareUrl(isBday);
   const whatsapp = `https://wa.me/?text=${encoded}%20${encodeURIComponent(url)}`;
   const facebook = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-  const twitter = `https://twitter.com/intent/tweet?text=${encoded}&url=${encodeURIComponent(url)}`;
+  const twitter = `https://x.com/intent/tweet?text=${encoded}&url=${encodeURIComponent(url)}`;
   const linkedin = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
 
   // Always render real anchors (right-click / SEO friendly).
