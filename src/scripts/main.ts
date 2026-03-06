@@ -1,7 +1,7 @@
 import { createEl, setHtml, on, qs } from '../utils/dom-helpers';
 import { validateInput, evaluateBirthday } from './birthday-logic';
 import { triggerConfetti } from './animations';
-import { generateShareHtml, shouldUseWebShare, sharePayload } from './sharing';
+import { generateShareHtml, shouldUseWebShare, sharePayload, downloadResultCard } from './sharing';
 import { initConsent, withdrawConsent } from './consent';
 
 const NOT_BIRTHDAY_MESSAGES = [
@@ -38,8 +38,11 @@ const NOT_BIRTHDAY_MESSAGES = [
 ];
 
 function randomNotBirthdayMessage() {
-  const idx = Math.floor(Math.random() * NOT_BIRTHDAY_MESSAGES.length);
-  return NOT_BIRTHDAY_MESSAGES[idx];
+  const arr = (typeof siteContent !== 'undefined' && siteContent.nee_teksten && siteContent.nee_teksten.length)
+    ? siteContent.nee_teksten
+    : NOT_BIRTHDAY_MESSAGES;
+  const idx = Math.floor(Math.random() * arr.length);
+  return arr[idx];
 }
 
 const BIRTHDAY_MESSAGES = [
@@ -70,9 +73,105 @@ const BIRTHDAY_MESSAGES = [
   'Nog even en je krijgt een lifetime achievement award 🎖️'
 ];
 
+type AffiliateCard = {
+  emoji: string;
+  label: string;
+  sub: string;
+  url: string;
+};
+
+interface SiteContent {
+  nee_teksten: string[];
+  ja_teksten: string[];
+  affiliate_ja: AffiliateCard[];
+  affiliate_nee: AffiliateCard[];
+  og_description?: string;
+}
+
+// Fallback content (keeps current hardcoded arrays as safety)
+const FALLBACK_CONTENT: SiteContent = {
+  nee_teksten: NOT_BIRTHDAY_MESSAGES,
+  ja_teksten: BIRTHDAY_MESSAGES,
+  affiliate_ja: [],
+  affiliate_nee: [],
+  og_description: ''
+};
+
+let siteContent: SiteContent = FALLBACK_CONTENT;
+
+async function loadContent(): Promise<void> {
+  try {
+    const res = await fetch('/config/content.json');
+    if (res.ok) {
+      const json = await res.json();
+      siteContent = { ...FALLBACK_CONTENT, ...json };
+    } else {
+      console.warn('Failed to fetch /config/content.json', res.status);
+    }
+  } catch (err) {
+    console.warn('Error loading /config/content.json, using fallback', err);
+  }
+}
+
+/**
+ * Days until next occurrence of the given day/month.
+ * Handles invalid dates (e.g. 29 Feb) by finding the next year where the date exists.
+ */
+function daysUntilBirthday(day: number, month: number, now = new Date()): number {
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let year = now.getFullYear();
+  let next = new Date(year, month - 1, day);
+  if (next.getTime() < start.getTime()) {
+    year += 1;
+    next = new Date(year, month - 1, day);
+  }
+  // If the constructed date rolled over (e.g. 29 Feb non-leap), loop until valid
+  while (next.getDate() !== day || (next.getMonth() + 1) !== month) {
+    year += 1;
+    next = new Date(year, month - 1, day);
+  }
+  const diffMs = next.setHours(0, 0, 0, 0) - start.getTime();
+  return Math.round(diffMs / (1000 * 60 * 60 * 24));
+}
+
+function renderAffiliateCards(
+  state: 'ja' | 'nee',
+  dagenTotVerjaardag?: number
+): HTMLElement {
+  const cards = state === 'ja' ? siteContent.affiliate_ja : siteContent.affiliate_nee;
+  const wrapper = createEl('div', { class: 'affiliate-grid' });
+
+  const count = (cards || []).length;
+
+  (cards || []).forEach(card => {
+    try {
+      const label = card.sub ? card.sub.replace('{dagen}', String(dagenTotVerjaardag ?? '')) : '';
+      const a = createEl('a', {
+        class: 'affiliate-card',
+        href: card.url,
+        target: '_blank',
+        rel: 'noopener sponsored'
+      });
+      a.innerHTML = `
+        <span class="affiliate-emoji">${card.emoji}</span>
+        <span class="affiliate-label">${card.label}</span>
+        <span class="affiliate-sub">${label}</span>
+      `;
+      wrapper.appendChild(a);
+    } catch (err) {
+      console.warn('Skipped malformed affiliate card', err);
+    }
+  });
+
+  return wrapper;
+}
+
 function randomBirthdayMessage() {
-  const idx = Math.floor(Math.random() * BIRTHDAY_MESSAGES.length);
-  return BIRTHDAY_MESSAGES[idx];
+  const arr = (siteContent && siteContent.ja_teksten && siteContent.ja_teksten.length)
+    ? siteContent.ja_teksten
+    : BIRTHDAY_MESSAGES;
+  const idx = Math.floor(Math.random() * arr.length);
+  return arr[idx];
 }
 
 function buildForm() {
@@ -211,10 +310,21 @@ function mountApp() {
   });
 
   // Handle share interactions (hybrid: anchors + Web Share + clipboard)
-  on(result, 'click', (ev: Event) => {
+  on(modalRoot, 'click', (ev: Event) => {
     const target = ev.target as HTMLElement;
     const platform = target.getAttribute?.('data-platform');
     const shareKey = target.getAttribute?.('data-share'); // 'native' for device share button
+    const action = target.getAttribute?.('data-action');
+
+    if (action === 'download') {
+      // fire-and-forget download (lazy-loaded html2canvas handled in sharing.ts)
+      try {
+        downloadResultCard();
+      } catch {
+        // ignore
+      }
+      return;
+    }
 
     if (!platform && !shareKey) return;
 
@@ -359,6 +469,19 @@ function mountApp() {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
         } catch { /* ignore */ }
+
+        // Append affiliate cards (best-effort)
+        try {
+          const days = daysUntilBirthday(day, month);
+          const cards = renderAffiliateCards('nee', days);
+          const containerEl = modalRoot.querySelector('.container-result') as HTMLElement | null;
+if (containerEl) {
+            containerEl.appendChild(cards);
+          } else {
+            modalRoot.appendChild(cards);
+          }
+        } catch { /* ignore */ }
+
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
@@ -398,6 +521,16 @@ function mountApp() {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
         } catch { /* ignore */ }
+
+        // Append affiliate cards (best-effort)
+        try {
+          const days = daysUntilBirthday(day, month);
+          const cards = renderAffiliateCards('ja', days);
+const containerEl = modalRoot.querySelector('.container-result') as HTMLElement | null;
+          if (containerEl) containerEl.appendChild(cards);
+          else modalRoot.appendChild(cards);
+        } catch { /* ignore */ }
+
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
@@ -409,7 +542,7 @@ function mountApp() {
       } else {
         modalRoot.className = 'result not-birthday';
         setHtml(modalRoot, `
-          <section class="container-result" aria-labelledby="result-heading">
+          <section class="container-result theme-blue" aria-labelledby="result-heading">
             <h2 id="result-heading">😔 Nee, je bent niet jarig</h2>
             <p>Helaas! Vandaag is niet jouw verjaardag.</p>
             <p><strong>${randomNotBirthdayMessage()}</strong></p>
@@ -424,7 +557,17 @@ function mountApp() {
         try {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
-    } catch { /* ignore */ }
+        } catch { /* ignore */ }
+
+        // Append affiliate cards (best-effort)
+        try {
+          const days = daysUntilBirthday(day, month);
+          const cards = renderAffiliateCards('nee', days);
+          const containerEl = modalRoot.querySelector('.container-result') as HTMLElement | null;
+          if (containerEl) containerEl.appendChild(cards);
+          else modalRoot.appendChild(cards);
+        } catch { /* ignore */ }
+
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
         if (headingEl) {
@@ -440,7 +583,8 @@ function mountApp() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadContent();
   initConsent({ container: qs('main') as HTMLElement });
   mountApp();
   appendFooter();
