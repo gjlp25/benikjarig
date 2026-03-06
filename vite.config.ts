@@ -1,19 +1,20 @@
 import { defineConfig } from 'vite';
+import { fileURLToPath, URL } from 'url';
 
 export default defineConfig({
   root: 'src',
   publicDir: '../public',
-  build: {
+    build: {
     outDir: '../dist',
     emptyOutDir: true,
     target: 'esnext',
     minify: 'esbuild',
     reportCompressedSize: true,
-    chunkSizeWarningLimit: 50,
-    rollupOptions: {
+    chunkSizeWarningLimit: 250,
+        rollupOptions: {
       input: {
-        main: 'index.html',
-        privacy: 'privacy.html'
+        main: fileURLToPath(new URL('./src/index.html', import.meta.url)),
+        privacy: fileURLToPath(new URL('./src/privacy.html', import.meta.url))
       }
     }
   },
