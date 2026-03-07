@@ -183,7 +183,7 @@ export function initConsent(options?: { container?: HTMLElement; domain?: string
   // Use requestIdleCallback if available
   const show = () => showConsentBanner(options);
   if ('requestIdleCallback' in window) {
-    (window as unknown as { requestIdleCallback?: (cb: () => void, opts?: unknown) => void }).requestIdleCallback?.(show, { timeout: 2000 });
+    window.requestIdleCallback?.(show, { timeout: 2000 });
   } else {
     setTimeout(show, 1200);
   }
@@ -203,9 +203,9 @@ export function _clearConsentForTests() {
 export function withdrawConsent(options?: { container?: HTMLElement }) {
   writeConsent(null);
   // Re-display the consent banner so the user can choose again.
-  try {
-    showConsentBanner(options as any);
-  } catch {
-    // best-effort; if banner cannot be shown, do nothing
-  }
+    try {
+      showConsentBanner(options);
+    } catch {
+      // best-effort; if banner cannot be shown, do nothing
+    }
 }

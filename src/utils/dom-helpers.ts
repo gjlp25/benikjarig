@@ -29,10 +29,10 @@ export function setHtml(el: HTMLElement | null, html: string) {
 }
 
 export function on(
-  el: Element | Document | Window | null,
+  el: EventTarget | null,
   event: string,
-  handler: EventListener
+  handler: EventListenerOrEventListenerObject
 ) {
-  if (!el || typeof (el as any).addEventListener !== 'function') return;
-  el.addEventListener(event, handler);
+  if (!el) return;
+  (el as EventTarget).addEventListener(event, handler as EventListenerOrEventListenerObject);
 }

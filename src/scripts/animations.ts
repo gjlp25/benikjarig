@@ -1,4 +1,5 @@
 /* Balloons removed per user request. */
+/* eslint-disable no-unused-vars */
 
 export async function triggerConfetti() {
   try {
@@ -8,6 +9,7 @@ export async function triggerConfetti() {
       (_opts: Record<string, unknown>): void;
       create: (canvas: HTMLCanvasElement, opts: Record<string, unknown>) => ConfettiFn;
     };
+/* eslint-enable no-unused-vars */
     const confetti = (mod && (mod.default || mod)) as unknown as ConfettiFn;
 
     // Create a canvas that is not announced by screen readers

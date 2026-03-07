@@ -141,8 +141,6 @@ function renderAffiliateCards(
   const cards = state === 'ja' ? siteContent.affiliate_ja : siteContent.affiliate_nee;
   const wrapper = createEl('div', { class: 'affiliate-grid' });
 
-  const count = (cards || []).length;
-
   (cards || []).forEach(card => {
     try {
       const label = card.sub ? card.sub.replace('{dagen}', String(dagenTotVerjaardag ?? '')) : '';
@@ -254,7 +252,6 @@ function mountApp() {
   mount.appendChild(formRoot);
 
   const form = qs('#birthdayForm') as HTMLFormElement;
-  const result = qs('#result') as HTMLElement;
   const checkBtn = qs('#checkBtn') as HTMLButtonElement;
   const dayInput = qs('#day') as HTMLInputElement;
   const monthInput = qs('#month') as HTMLInputElement;

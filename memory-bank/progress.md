@@ -1,35 +1,32 @@
-# progress.md — benikvandaagjarig.nl
+# progress.md — voortgangslog (geüpdatet 2026-03-07)
 
-## Statusoverzicht (bijgewerkt 2026-03-06)
+## Samenvatting huidige status
+- Development branch is gemerged naar main; wijzigingen zijn naar origin/main gepushed.
+- Lokale dev-wijzigingen gecommit vóór merge.
+- Build succesvol: `npm run build` produceert /dist zonder fouten.
+- CI/Docker build initieel faalde door Vite entry-resolutie voor `privacy.html`; opgelost in `vite.config.ts`.
 
-### Recent afgeronde taken
-- ✅ Injectie van build-datum via `__BUILD_DATE__` (vite.config.ts + src/types/env.d.ts).
-- ✅ Strengere security headers toegevoegd in `vercel.json` (CSP, Permissions-Policy, HSTS, Cache-Control voor HTML).
-- ✅ Privacyverklaring geactualiseerd (tekst + datum).
-- ✅ Twitter → X share-URL bijgewerkt (src/scripts/sharing.ts).
-- ✅ Tijdelijke favicon/logo-assets toegevoegd aan `public/` (niet geactiveerd in HTML).
-- ✅ Revert: favicon-links en footer-logo verwijderd uit HTML per gebruikersverzoek.
-- ✅ Alle wijzigingen gecommit en naar `main` gepusht.
-- ✅ publicDir toegevoegd aan `vite.config.ts` zodat `/config/content.json` vanuit `public/` wordt geserveerd tijdens development.
-- ✅ Affiliate-kaarten functionaliteit geïmplementeerd en gerenderd binnen de resultaatkaart (src/scripts/main.ts + src/styles/main.css).
-- ✅ Download van resultaatcard toegevoegd (lazy-load html2canvas, src/scripts/sharing.ts) en getest in dev.
-- ✅ Tijdelijke debug-logs verwijderd uit src/scripts/main.ts na verificatie.
+## Recente wijzigingen (kort)
+- Merge: dev → main (alle recente features en fixes).
+- Fix: Vite rollup input paden opgelost (gebruik fileURLToPath voor src/index.html en src/privacy.html).
+- Fix: `chunkSizeWarningLimit` verhoogd naar 250 om onnodige waarschuwingen voor lazy-loaded html2canvas te onderdrukken.
+- UI: "Bewaar als afbeelding" knoptekst aangepast; NEE-resultaat gebruikt nu `.theme-blue`.
+- Sharing: sharing.ts bijgewerkt (X/twitter -> x.com); image-export gebruikt lazy-loaded html2canvas.
+- public/config/content.json toegevoegd en gebruikt voor dynamische teksten & affiliate-kaarten.
+- Memory bank: activeContext.md bijgewerkt met bovenstaande details.
 
-### Tests & verificatie
-- Aanbevolen: draai de volledige build en run de tests lokaal:
-  - npm ci
-  - npm run build
-  - npx playwright install
-  - npm run test
-  - npm run test:e2e (optioneel in Docker)
-- Voer een security scan (Mozilla Observatory / SecurityHeaders.io) na deploy.
+## Build & CI
+- Lokaal: `npm run build` succesvol; dist/ gegenereerd.
+- Docker: eerder faalde build door Vite-resolutie van privacy.html — nu opgelost; her-test aanbevolen in Docker omgeving.
+- Opmerking: html2canvas is relatief groot (gz ~48KB) maar wordt lazy-loaded op user-actie; geen impact op initial bundle.
 
-### Openstaande (optioneel / lage inspanning)
-- Verwijder of archiveer ongebruikte bestanden in `public/` als je ze niet wilt bewaren.
-- Voeg CSP-reporting toe (report-to/report-uri) voor monitoring.
-- Integreer Lighthouse CI in de CI workflow.
+## Openstaande taken / follow-ups
+- Verifieer Docker build opnieuw (docker compose build) in target omgeving.
+- Controleer security headers na deploy (observatory / SecurityHeaders.io).
+- Overweeg server-side OG-generatie voor consistente social previews (optioneel).
+- (Optioneel) Verdere chunking of manualChunks indien gewenst voor CI-linting.
+- Run `npm run dev` om dev-server lokaal te verifiëren.
 
-### Volgende aanbevolen stappen
-1. Deploy naar Vercel en verifieer headers.
-2. Test OG-image API onder de stricte CSP.
-3. Beslis of `public/favicon.png` en `public/logo.png` moeten blijven of verwijderd.
+## Besluiten
+- Snelle en veilige keuze: html2canvas lazy-loaden en warning onderdrukken — behoud eenvoud en performance.
+- Vite input-resolutie is nu OS-onafhankelijk met fileURLToPath; dit voorkomt CI/Docker buildfouten.
