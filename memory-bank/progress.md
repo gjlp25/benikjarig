@@ -1,32 +1,27 @@
-# progress.md — voortgangslog (geüpdatet 2026-03-07)
+# progress.md — voortgangslog (geüpdatet 2026-03-08)
 
 ## Samenvatting huidige status
-- Development branch is gemerged naar main; wijzigingen zijn naar origin/main gepushed.
-- Lokale dev-wijzigingen gecommit vóór merge.
-- Build succesvol: `npm run build` produceert /dist zonder fouten.
-- CI/Docker build initieel faalde door Vite entry-resolutie voor `privacy.html`; opgelost in `vite.config.ts`.
+- Nieuwe feature: dedicated off-screen share-card en verbeterde image-export zijn geïmplementeerd en gemerged naar de werkbranch.
+- Lokale devserver draait voor snelle verificatie (Vite).
+- Een poging om het logo in de share-card op te nemen is gemaakt maar op verzoek van de gebruiker onmiddellijk teruggedraaid.
 
 ## Recente wijzigingen (kort)
-- Merge: dev → main (alle recente features en fixes).
-- Fix: Vite rollup input paden opgelost (gebruik fileURLToPath voor src/index.html en src/privacy.html).
-- Fix: `chunkSizeWarningLimit` verhoogd naar 250 om onnodige waarschuwingen voor lazy-loaded html2canvas te onderdrukken.
-- UI: "Bewaar als afbeelding" knoptekst aangepast; NEE-resultaat gebruikt nu `.theme-blue`.
-- Sharing: sharing.ts bijgewerkt (X/twitter -> x.com); image-export gebruikt lazy-loaded html2canvas.
-- public/config/content.json toegevoegd en gebruikt voor dynamische teksten & affiliate-kaarten.
-- Memory bank: activeContext.md bijgewerkt met bovenstaande details.
+- Implementatie: `buildShareCard()` toegevoegd aan `src/scripts/sharing.ts`.
+- `downloadResultCard()` aangepast om `#share-card` te capturen met html2canvas op een vaste 500×500 px card (scale 2).
+- `src/scripts/main.ts` bijgewerkt om `buildShareCard()` op het juiste moment aan te roepen.
+- UI-experiment: logo tijdelijk toegevoegd en daarna teruggedraaid naar tekst‑branding.
 
 ## Build & CI
-- Lokaal: `npm run build` succesvol; dist/ gegenereerd.
-- Docker: eerder faalde build door Vite-resolutie van privacy.html — nu opgelost; her-test aanbevolen in Docker omgeving.
-- Opmerking: html2canvas is relatief groot (gz ~48KB) maar wordt lazy-loaded op user-actie; geen impact op initial bundle.
+- Lokaal: devserver gestart (`npm run dev`). Aanbevolen: run `npm run build` en CI pipeline voor volledige verificatie.
+- Testen: handmatige verificatie aanbevolen (download PNGs, controleer contrast en snijrand). Optioneel: voeg een Playwright visual test toe.
 
 ## Openstaande taken / follow-ups
-- Verifieer Docker build opnieuw (docker compose build) in target omgeving.
-- Controleer security headers na deploy (observatory / SecurityHeaders.io).
-- Overweeg server-side OG-generatie voor consistente social previews (optioneel).
-- (Optioneel) Verdere chunking of manualChunks indien gewenst voor CI-linting.
-- Run `npm run dev` om dev-server lokaal te verifiëren.
+- [ ] Visuele verificatie over browsers/devices (inclusief mobile screenshots).
+- [ ] Overweeg logo‑variant(en) en test strategy als gebruiker terug wil dat logo opgenomen wordt.
+- [ ] Voeg visual regression test toe voor de share-card in CI (Playwright / snapshot).
+- [x] Update memory bank met deze sessie (deze wijziging).
 
 ## Besluiten
-- Snelle en veilige keuze: html2canvas lazy-loaden en warning onderdrukken — behoud eenvoud en performance.
-- Vite input-resolutie is nu OS-onafhankelijk met fileURLToPath; dit voorkomt CI/Docker buildfouten.
+- Default: geen logo in de gegenereerde share-image tenzij expliciet gewenst.
+- Gebruik inline stijlen voor off‑screen share-card om html2canvas-compatibiliteit te maximaliseren.
+- Keep it simple: compacte, snel leesbare 1:1 afbeeldingen zonder functionele UI-elementen.

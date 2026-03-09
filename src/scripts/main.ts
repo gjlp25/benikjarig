@@ -1,7 +1,7 @@
 import { createEl, setHtml, on, qs } from '../utils/dom-helpers';
 import { validateInput, evaluateBirthday } from './birthday-logic';
 import { triggerConfetti } from './animations';
-import { generateShareHtml, shouldUseWebShare, sharePayload, downloadResultCard } from './sharing';
+import { generateShareHtml, shouldUseWebShare, sharePayload, downloadResultCard, buildShareCard } from './sharing';
 import { initConsent, withdrawConsent } from './consent';
 
 const NOT_BIRTHDAY_MESSAGES = [
@@ -438,6 +438,7 @@ function mountApp() {
 
       if (res.leapYearMessage) {
         modalRoot.className = 'leap-year';
+        const leapMsg = 'Jouw verjaardag (29 februari) bestaat alleen in schrikkeljaren!';
         setHtml(modalRoot, `
         <section class="container-result" aria-live="polite">
             <div class="result-particles" aria-hidden="true">
@@ -467,6 +468,11 @@ function mountApp() {
           if (_app) _app.setAttribute('aria-hidden', 'true');
         } catch { /* ignore */ }
 
+        // Build off-screen share card for image export (leap-year uses special styling)
+        try {
+          buildShareCard({ isBday: false, age: res.age, subtekst: leapMsg, isLeap: true });
+        } catch { /* ignore */ }
+
         // Append affiliate cards (best-effort)
         try {
           const days = daysUntilBirthday(day, month);
@@ -486,6 +492,7 @@ if (containerEl) {
         }
       } else if (res.isBirthday) {
         modalRoot.className = 'result birthday';
+        const birthdayMsg = randomBirthdayMessage();
         setHtml(modalRoot, `
           <section class="container-result theme-rose" aria-live="polite">
             <div class="result-particles" aria-hidden="true">
@@ -503,7 +510,7 @@ if (containerEl) {
               <span aria-hidden="true">🎈</span>
             </p>
 
-            <h3 class="result-line en">${randomBirthdayMessage()}</h3>
+            <h3 class="result-line en">${birthdayMsg}</h3>
 
             <div class="result-actions" role="group" aria-label="Deel dit">
               ${generateShareHtml(true)}
@@ -517,6 +524,11 @@ if (containerEl) {
         try {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
+        } catch { /* ignore */ }
+
+        // Build off-screen share card for image export
+        try {
+          buildShareCard({ isBday: true, age: res.age, subtekst: birthdayMsg });
         } catch { /* ignore */ }
 
         // Append affiliate cards (best-effort)
@@ -538,11 +550,12 @@ const containerEl = modalRoot.querySelector('.container-result') as HTMLElement 
         triggerConfetti();
       } else {
         modalRoot.className = 'result not-birthday';
+        const notBdayMsg = randomNotBirthdayMessage();
         setHtml(modalRoot, `
           <section class="container-result theme-blue" aria-labelledby="result-heading">
             <h2 id="result-heading">😔 Nee, je bent niet jarig</h2>
             <p>Helaas! Vandaag is niet jouw verjaardag.</p>
-            <p><strong>${randomNotBirthdayMessage()}</strong></p>
+            <p><strong>${notBdayMsg}</strong></p>
             <div class="age-display">Je bent ${res.age ?? '-'} jaar oud</div>
             ${generateShareHtml(false)}
           </section>
@@ -554,6 +567,11 @@ const containerEl = modalRoot.querySelector('.container-result') as HTMLElement 
         try {
           const _app = qs('#app') as HTMLElement | null;
           if (_app) _app.setAttribute('aria-hidden', 'true');
+        } catch { /* ignore */ }
+
+        // Build off-screen share card for image export
+        try {
+          buildShareCard({ isBday: false, age: res.age, subtekst: notBdayMsg });
         } catch { /* ignore */ }
 
         // Append affiliate cards (best-effort)
