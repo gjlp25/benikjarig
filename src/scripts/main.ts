@@ -444,14 +444,6 @@ function mountApp() {
         } catch { /* ignore */ }
 
         // Build off-screen share card for image export (leap-year uses special styling)
-<<<<<<< HEAD
-=======
-        try {
-          buildShareCard({ isBday: false, age: res.age, subtekst: leapMsg, isLeap: true });
-        } catch { /* ignore */ }
-
-        // Append affiliate cards (best-effort)
->>>>>>> 0581c0c87746f6108f4f270638aa0f5631f7826f
         try {
           buildShareCard({ isBday: false, age: res.age, subtekst: leapMsg, isLeap: true });
         } catch { /* ignore */ }
@@ -500,14 +492,6 @@ function mountApp() {
         } catch { /* ignore */ }
 
         // Build off-screen share card for image export
-<<<<<<< HEAD
-=======
-        try {
-          buildShareCard({ isBday: true, age: res.age, subtekst: birthdayMsg });
-        } catch { /* ignore */ }
-
-        // Append affiliate cards (best-effort)
->>>>>>> 0581c0c87746f6108f4f270638aa0f5631f7826f
         try {
           buildShareCard({ isBday: true, age: res.age, subtekst: birthdayMsg });
         } catch { /* ignore */ }
@@ -544,14 +528,6 @@ function mountApp() {
         } catch { /* ignore */ }
 
         // Build off-screen share card for image export
-<<<<<<< HEAD
-=======
-        try {
-          buildShareCard({ isBday: false, age: res.age, subtekst: notBdayMsg });
-        } catch { /* ignore */ }
-
-        // Append affiliate cards (best-effort)
->>>>>>> 0581c0c87746f6108f4f270638aa0f5631f7826f
         try {
           buildShareCard({ isBday: false, age: res.age, subtekst: notBdayMsg });
         } catch { /* ignore */ }
