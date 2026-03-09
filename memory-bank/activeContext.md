@@ -1,40 +1,34 @@
 # activeContext.md — benikvandaagjarig.nl
 
-## Laatste status (geüpdatet 2026-03-06)
+## Laatste status (geüpdatet 2026-03-09)
 
-Kort overzicht van recente acties:
-- Build-time injectie toegevoegd: Vite define __BUILD_DATE__ (vite.config.ts) en TypeScript-declaratie (src/types/env.d.ts).
-- Security headers aangescherpt in vercel.json: striktere CSP (geen 'unsafe-inline'), beperkter img-src, uitgebreid Permissions-Policy en Cache-Control voor HTML.
-- Privacyverklaring bijgewerkt (src/privacy.html) — tekst geactualiseerd en datum aangepast naar 2026-03-05.
-- Sharing: Twitter/X share-URL aangepast naar x.com (src/scripts/sharing.ts).
-- Favicon/logo: assets toegevoegd aan public/ (favicon.png, logo.png) maar uiteindelijk niet geactiveerd in HTML (wijziging in index.html en footer teruggedraaid).
-- Kleine UI cleanup: footer-logo verwijderd en favicon-links uit index.html verwijderd per gebruikersverzoek.
-- Alle codewijzigingen gecommit en gepusht naar main.
-
-## Recente wijzigingen (nieuw)
-- publicDir toegevoegd aan `vite.config.ts` (`publicDir: '../public'`) zodat `/config/content.json` correct wordt geserveerd tijdens development.
-- Content.json (public/config/content.json) toegevoegd/gebruiked als runtime content (teksten + affiliate data).
-- Affiliate-kaarten functionaliteit toegevoegd en geïntegreerd in de result-card (src/scripts/main.ts + src/styles/main.css).
-- Download/beeld-export feature toegevoegd (lazy-load html2canvas) en knoptekst gewijzigd naar "🖼️ Bewaar als afbeelding" (src/scripts/sharing.ts).
-- Tijdelijke debug-logs tijdelijk toegevoegd voor verificatie en daarna verwijderd uit src/scripts/main.ts.
-- NEE-resultaat heeft nu een licht thema `.theme-blue` zodat screenshots / gegenereerde afbeeldingen lichter en vriendelijker zijn.
-- Event-delegatie voor share/download is verplaatst naar `#modal-root` (fix voor klikdelegatie).
+Kort overzicht van recente acties (nieuw):
+- Feature: compacte "share-card" toegevoegd als off-screen render-target voor beeldexport (500×500, inline styles). Implementatie: `buildShareCard(opts)` in `src/scripts/sharing.ts`.
+- Export: `downloadResultCard()` aangepast om `#share-card` te capturen (html2canvas, scale 2) in plaats van `.container-result`. Dit levert een compacte 1:1 afbeelding zonder knoppen of affiliate‑kaarten.
+- Integratie: `src/scripts/main.ts` is bijgewerkt om `buildShareCard()` aan te roepen in alle result‑branches (jarig / niet-jarig / schrikkeljaar) en zo de share-card direct voor te bereiden na het tonen van de resultaten.
+- Branding: logo‑injectie in de share-card werd getest maar op verzoek teruggedraaid — share-card gebruikt nu tekst‑only branding ("benikvandaagjarig.nl").
+- Monetization change: affiliate‑cards verwijderd uit de UI per productbesluit:
+  - `src/scripts/main.ts` — affiliate-rendering verwijdert (no-op).
+  - `public/config/content.json` — `affiliate_ja` & `affiliate_nee` leeggemaakt.
+  - `src/styles/main.css` — affiliate CSS-regels verwijderd.
+- UX tweak: extra spacing toegevoegd aan result containers zodat geanimeerde icoontjes niet de share-knoppen overlappen:
+  - `.container-result` padding-bottom verhoogd naar 80px.
+  - `.container-result.theme-rose::after` bottom verplaatst naar 48px.
+- Dev: bestanden aangepast en lokaal geverifieerd; aanbevolen: run `npm run dev` voor visuele controle.
 
 ## Wat werkt nu
-- Build-time metadata wordt automatisch ingesloten in builds.
-- Strakke security headers zijn aanwezig voor hosting op Vercel.
-- Consent flow en privacy-tekst zijn up-to-date en documenteert dat er geen persoonlijke gegevens worden opgeslagen.
-- Social sharing werkt inclusief Web Share API fallback; share buttons + native share + image-export werken in dev.
-- Dynamic content via `public/config/content.json` wordt geladen en gebruikt voor affiliate-kaarten en teksten.
+- De "Bewaar als afbeelding" knop downloadt een compacte, gebrande 1:1 PNG (geen knoppen/affiliate‑kaarten).
+- Share-card bouwt consistent met inline CSS zodat html2canvas betrouwbare renders produceert.
+- UI is opgeschoond van affiliate-kaarten om zichtbaarheid/branding en share-ervaring te prioriteren.
+- Animaties staan nog aan, maar de layout voorkomt overlap met belangrijke knoppen.
 
-## Openstaande taken (prioriteit)
-1. Verifieer headers en CSP na deploy (SecurityHeaders.io / Mozilla Observatory).
-2. Controleer OG API (api/og) onder strengere CSP en pas indien nodig bronnen toe.
-3. (Optioneel) Verwijder ongebruikte assets uit `public/` als je ze niet wilt bewaren.
-4. Overweeg: Web Share met `files` ondersteuning (deel image als bijlage op mobiele apparaten) — optioneel en platform-gebonden.
-5. Productie cleanup: verwijder eventuele resterende console.debug statements en voer final tests uit (build/test/CI).
+## Openstaande taken / follow-ups (prioriteit)
+1. Visuele verificatie: controleer gedownloade afbeeldingen en UI op meerdere devices/browsers (contrast, fonts, rendering).
+2. (Optioneel) Als monetization later terug mag: herstel data‑driven affiliate-kaarten, of maak feature‑flag / toggle; bewaar types/shape in code.
+3. Voeg visual regression test toe voor share-card in CI (Playwright snapshot).
+4. Documenteer logo-variant‑strategie (contrast‑vriendelijke versies) voordat logo weer wordt opgenomen.
 
 ## Beslissingen / overwegingen
-- We bewaren `favicon.png` en `logo.png` in `public/` voor toekomstig gebruik, maar activeren ze niet in HTML zonder expliciete aanwijzing.
-- Vercel blijft de aanbevolen hostingoptie — `public/` wordt meegenomen door de build nu dat `publicDir` correct is ingesteld.
-- Dynamische OG-images blijven de aanbevolen manier om consistente social previews te garanderen; client-side gegenereerde PNG's zijn handig voor gebruikers maar niet geschikt als OG-preview door platforms.
+- Productprioriteit: zichtbaarheid en share‑ervaring eerst; monetization (affiliate cards) staat tijdelijk uit.
+- Share‑card rendering: gebruik inline styles en off‑screen element voor html2canvas-compatibiliteit.
+- Accessibility: share-card heeft `aria-hidden="true"` en beïnvloedt geen screen reader flow.

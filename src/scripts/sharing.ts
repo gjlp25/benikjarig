@@ -101,16 +101,95 @@ export function generateShareHtml(isBday: boolean) {
   `;
 }
 
+export type ShareCardOptions = {
+  isBday: boolean;
+  age: number | null;
+  subtekst: string;
+  isLeap?: boolean;
+};
+
+/**
+ * Build or update an off-screen share card used as the html2canvas target.
+ * The element is kept off-screen (not display:none) so html2canvas can render it.
+ * Inline styles are used to make the rendering consistent across environments.
+ */
+export function buildShareCard(opts: ShareCardOptions): void {
+  try {
+    const { isBday, age, subtekst, isLeap } = opts;
+    let el = document.getElementById('share-card') as HTMLElement | null;
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'share-card';
+      el.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(el);
+    }
+
+    const bg = isBday
+      ? 'linear-gradient(135deg, #ff9aa7 0%, #ffb4c8 50%, #fecfef 100%)'
+      : isLeap
+        ? 'linear-gradient(135deg, #94fbab 0%, #a9fff7 100%)'
+        : 'linear-gradient(180deg, #b2e1ff 0%, #a9fff7 100%)';
+
+    // Inline CSS to ensure html2canvas renders exactly as intended
+    el.style.cssText = [
+      'position: fixed',
+      'left: -9999px',
+      'top: 0',
+      'width: 500px',
+      'height: 500px',
+      'z-index: -1',
+      'pointer-events: none',
+      'overflow: hidden',
+      'display: flex',
+      'flex-direction: column',
+      'align-items: center',
+      'justify-content: space-between',
+      'text-align: center',
+      'padding: 36px 40px',
+      'box-sizing: border-box',
+      "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      `background: ${bg}`
+    ].join(';');
+
+    const official = isBday ? '🎉 OFFICIEEL VASTGESTELD:' : (isLeap ? '🗓️ BIJZONDERE SITUATIE:' : '😔 OFFICIEEL VASTGESTELD:');
+    const headline = isBday
+      ? `IK BEN VANDAAG<br>${age !== null ? `${age} JAAR GEWORDEN` : 'JARIG!'}`
+      : isLeap
+        ? 'MIJN VERJAARDAG<br>BESTAAT NIET DIT JAAR'
+        : 'IK BEN VANDAAG<br>NIET JARIG';
+
+    const textColor = '#1a1a1a';
+    const mutedColor = 'rgba(0,0,0,0.55)';
+
+    el.innerHTML = `
+      <div style="font-size:13px;font-weight:700;letter-spacing:1px;color:${mutedColor};align-self:flex-start;">benikvandaagjarig.nl</div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:16px;max-width:420px;">
+        <div style="font-size:16px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:${textColor};">${official}</div>
+        <div style="font-size:46px;font-weight:900;line-height:1.1;color:${textColor};text-transform:uppercase;">${headline}</div>
+        <div style="font-size:18px;font-weight:600;color:${textColor};opacity:0.85;max-width:380px;">${subtekst}</div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;letter-spacing:1px;color:${mutedColor};align-self:flex-end;">benikvandaagjarig.nl</div>
+    `;
+  } catch {
+    // best-effort: if building the share card fails, we silently continue
+  }
+}
+
 export async function downloadResultCard(): Promise<void> {
   try {
     const { default: html2canvas } = await import('html2canvas');
-    const card = document.querySelector('.container-result') as HTMLElement | null;
+    const card = document.getElementById('share-card') as HTMLElement | null;
     if (!card) return;
 
+    // html2canvas will render the element's inline styles; scale 2 => 1000x1000px output
     const canvas = await html2canvas(card, {
       scale: 2,
       useCORS: true,
-      backgroundColor: null
+      backgroundColor: null,
+      width: 500,
+      height: 500
     });
 
     const link = document.createElement('a');

@@ -1,32 +1,23 @@
-# progress.md — voortgangslog (geüpdatet 2026-03-07)
+# progress.md — voortgangslog (geüpdatet 2026-03-09)
 
 ## Samenvatting huidige status
-- Development branch is gemerged naar main; wijzigingen zijn naar origin/main gepushed.
-- Lokale dev-wijzigingen gecommit vóór merge.
-- Build succesvol: `npm run build` produceert /dist zonder fouten.
-- CI/Docker build initieel faalde door Vite entry-resolutie voor `privacy.html`; opgelost in `vite.config.ts`.
+- Nieuwe feature: dedicated off-screen share-card en verbeterde image-export zijn geïmplementeerd.
+- UI-opruiming: affiliate-buttons en -data tijdelijk verwijderd om zichtbaarheid en share-ervaring te prioriteren.
+- UX-fix: extra bottom-padding toegevoegd aan result containers om animatie-icoontjes niet over de "Delen" knop te laten vallen.
 
 ## Recente wijzigingen (kort)
-- Merge: dev → main (alle recente features en fixes).
-- Fix: Vite rollup input paden opgelost (gebruik fileURLToPath voor src/index.html en src/privacy.html).
-- Fix: `chunkSizeWarningLimit` verhoogd naar 250 om onnodige waarschuwingen voor lazy-loaded html2canvas te onderdrukken.
-- UI: "Bewaar als afbeelding" knoptekst aangepast; NEE-resultaat gebruikt nu `.theme-blue`.
-- Sharing: sharing.ts bijgewerkt (X/twitter -> x.com); image-export gebruikt lazy-loaded html2canvas.
-- public/config/content.json toegevoegd en gebruikt voor dynamische teksten & affiliate-kaarten.
-- Memory bank: activeContext.md bijgewerkt met bovenstaande details.
+- `src/scripts/sharing.ts` — `buildShareCard()` + `downloadResultCard()` toegevoegd/gevinaliseerd.
+- `src/scripts/main.ts` — affiliate-rendering verwijderd (no-op) en `buildShareCard()` aangeroepen in result flows.
+- `src/styles/main.css` — affiliate-styling verwijderd; `.container-result` padding-bottom verhoogd naar 80px; `.container-result.theme-rose::after` bottom -> 48px.
+- `public/config/content.json` — `affiliate_ja` & `affiliate_nee` leeggemaakt.
+- Memory bank (dit bestand + activeContext.md) bijgewerkt met sessie-notities.
 
-## Build & CI
-- Lokaal: `npm run build` succesvol; dist/ gegenereerd.
-- Docker: eerder faalde build door Vite-resolutie van privacy.html — nu opgelost; her-test aanbevolen in Docker omgeving.
-- Opmerking: html2canvas is relatief groot (gz ~48KB) maar wordt lazy-loaded op user-actie; geen impact op initial bundle.
+## Build & QA
+- Lokaal: devserver aanbevolen (`npm run dev`) voor visuele check.
+- Tests: overweeg Playwright visual snapshot voor share-card in CI.
 
 ## Openstaande taken / follow-ups
-- Verifieer Docker build opnieuw (docker compose build) in target omgeving.
-- Controleer security headers na deploy (observatory / SecurityHeaders.io).
-- Overweeg server-side OG-generatie voor consistente social previews (optioneel).
-- (Optioneel) Verdere chunking of manualChunks indien gewenst voor CI-linting.
-- Run `npm run dev` om dev-server lokaal te verifiëren.
-
-## Besluiten
-- Snelle en veilige keuze: html2canvas lazy-loaden en warning onderdrukken — behoud eenvoud en performance.
-- Vite input-resolutie is nu OS-onafhankelijk met fileURLToPath; dit voorkomt CI/Docker buildfouten.
+- [ ] Visuele verificatie over browsers/devices (inclusief mobile screenshots).
+- [ ] Voeg visual regression test toe voor de share-card in CI (Playwright / snapshot).
+- [ ] Eventuele herintroductie van affiliate‑content voorzien van feature-flag / A/B en contrast‑vriendelijke logo‑varianten.
+- [x] Memory bank bijgewerkt

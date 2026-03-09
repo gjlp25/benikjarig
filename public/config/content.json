@@ -58,40 +58,8 @@
     "Jij verdient confetti. Veel confetti. 🎊",
     "Nog even en je krijgt een lifetime achievement award 🎖️"
   ],
-  "affiliate_ja": [
-    {
-      "emoji": "🎁",
-      "label": "Trakteer jezelf",
-      "sub": "Gepersonaliseerde cadeaus",
-      "url": "https://yoursurprise.nl/?utm_source=bivj"
-    },
-    {
-      "emoji": "🎂",
-      "label": "Taart bestellen",
-      "sub": "Bezorging vandaag mogelijk",
-      "url": "https://greetz.nl/taart?utm_source=bivj"
-    },
-    {
-      "emoji": "🎉",
-      "label": "Versiering kopen",
-      "sub": "Feestartikelen",
-      "url": "https://bol.com/feest?utm_source=bivj"
-    }
-  ],
-  "affiliate_nee": [
-    {
-      "emoji": "💝",
-      "label": "Iemand anders jarig?",
-      "sub": "Bekijk cadeautips",
-      "url": "https://bol.com/cadeaus?utm_source=bivj"
-    },
-    {
-      "emoji": "📬",
-      "label": "Stuur een kaartje",
-      "sub": "Al over {dagen} dagen ben jij jarig",
-      "url": "https://greetz.nl/kaarten?utm_source=bivj"
-    }
-  ],
+  "affiliate_ja": [],
+  "affiliate_nee": [],
   "og_description": "Ben jij vandaag jarig? Check het officieel op benikvandaagjarig.nl",
-  "_meta": { "updated": "2026-03-06", "version": "1.0" }
+  "_meta": { "updated": "2026-03-09", "version": "1.1" }
 }

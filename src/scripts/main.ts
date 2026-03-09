@@ -1,7 +1,7 @@
 import { createEl, setHtml, on, qs } from '../utils/dom-helpers';
 import { validateInput, evaluateBirthday } from './birthday-logic';
 import { triggerConfetti } from './animations';
-import { generateShareHtml, shouldUseWebShare, sharePayload, downloadResultCard } from './sharing';
+import { generateShareHtml, shouldUseWebShare, sharePayload, downloadResultCard, buildShareCard } from './sharing';
 import { initConsent, withdrawConsent } from './consent';
 
 const NOT_BIRTHDAY_MESSAGES = [
@@ -134,34 +134,9 @@ function daysUntilBirthday(day: number, month: number, now = new Date()): number
   return Math.round(diffMs / (1000 * 60 * 60 * 24));
 }
 
-function renderAffiliateCards(
-  state: 'ja' | 'nee',
-  dagenTotVerjaardag?: number
-): HTMLElement {
-  const cards = state === 'ja' ? siteContent.affiliate_ja : siteContent.affiliate_nee;
-  const wrapper = createEl('div', { class: 'affiliate-grid' });
-
-  (cards || []).forEach(card => {
-    try {
-      const label = card.sub ? card.sub.replace('{dagen}', String(dagenTotVerjaardag ?? '')) : '';
-      const a = createEl('a', {
-        class: 'affiliate-card',
-        href: card.url,
-        target: '_blank',
-        rel: 'noopener sponsored'
-      });
-      a.innerHTML = `
-        <span class="affiliate-emoji">${card.emoji}</span>
-        <span class="affiliate-label">${card.label}</span>
-        <span class="affiliate-sub">${label}</span>
-      `;
-      wrapper.appendChild(a);
-    } catch (err) {
-      console.warn('Skipped malformed affiliate card', err);
-    }
-  });
-
-  return wrapper;
+function renderAffiliateCards(): HTMLElement {
+  // Affiliate cards removed from UI by request — return empty container.
+  return createEl('div');
 }
 
 function randomBirthdayMessage() {
@@ -438,6 +413,7 @@ function mountApp() {
 
       if (res.leapYearMessage) {
         modalRoot.className = 'leap-year';
+        const leapMsg = 'Jouw verjaardag (29 februari) bestaat alleen in schrikkeljaren!';
         setHtml(modalRoot, `
         <section class="container-result" aria-live="polite">
             <div class="result-particles" aria-hidden="true">
@@ -467,17 +443,12 @@ function mountApp() {
           if (_app) _app.setAttribute('aria-hidden', 'true');
         } catch { /* ignore */ }
 
-        // Append affiliate cards (best-effort)
+        // Build off-screen share card for image export (leap-year uses special styling)
         try {
-          const days = daysUntilBirthday(day, month);
-          const cards = renderAffiliateCards('nee', days);
-          const containerEl = modalRoot.querySelector('.container-result') as HTMLElement | null;
-if (containerEl) {
-            containerEl.appendChild(cards);
-          } else {
-            modalRoot.appendChild(cards);
-          }
+          buildShareCard({ isBday: false, age: res.age, subtekst: leapMsg, isLeap: true });
         } catch { /* ignore */ }
+
+        // Affiliate cards removed per request — no-op
 
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
@@ -486,6 +457,7 @@ if (containerEl) {
         }
       } else if (res.isBirthday) {
         modalRoot.className = 'result birthday';
+        const birthdayMsg = randomBirthdayMessage();
         setHtml(modalRoot, `
           <section class="container-result theme-rose" aria-live="polite">
             <div class="result-particles" aria-hidden="true">
@@ -503,7 +475,7 @@ if (containerEl) {
               <span aria-hidden="true">🎈</span>
             </p>
 
-            <h3 class="result-line en">${randomBirthdayMessage()}</h3>
+            <h3 class="result-line en">${birthdayMsg}</h3>
 
             <div class="result-actions" role="group" aria-label="Deel dit">
               ${generateShareHtml(true)}
@@ -519,14 +491,12 @@ if (containerEl) {
           if (_app) _app.setAttribute('aria-hidden', 'true');
         } catch { /* ignore */ }
 
-        // Append affiliate cards (best-effort)
+        // Build off-screen share card for image export
         try {
-          const days = daysUntilBirthday(day, month);
-          const cards = renderAffiliateCards('ja', days);
-const containerEl = modalRoot.querySelector('.container-result') as HTMLElement | null;
-          if (containerEl) containerEl.appendChild(cards);
-          else modalRoot.appendChild(cards);
+          buildShareCard({ isBday: true, age: res.age, subtekst: birthdayMsg });
         } catch { /* ignore */ }
+
+        // Affiliate cards removed per request — no-op
 
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
@@ -538,11 +508,12 @@ const containerEl = modalRoot.querySelector('.container-result') as HTMLElement 
         triggerConfetti();
       } else {
         modalRoot.className = 'result not-birthday';
+        const notBdayMsg = randomNotBirthdayMessage();
         setHtml(modalRoot, `
           <section class="container-result theme-blue" aria-labelledby="result-heading">
             <h2 id="result-heading">😔 Nee, je bent niet jarig</h2>
             <p>Helaas! Vandaag is niet jouw verjaardag.</p>
-            <p><strong>${randomNotBirthdayMessage()}</strong></p>
+            <p><strong>${notBdayMsg}</strong></p>
             <div class="age-display">Je bent ${res.age ?? '-'} jaar oud</div>
             ${generateShareHtml(false)}
           </section>
@@ -556,14 +527,12 @@ const containerEl = modalRoot.querySelector('.container-result') as HTMLElement 
           if (_app) _app.setAttribute('aria-hidden', 'true');
         } catch { /* ignore */ }
 
-        // Append affiliate cards (best-effort)
+        // Build off-screen share card for image export
         try {
-          const days = daysUntilBirthday(day, month);
-          const cards = renderAffiliateCards('nee', days);
-          const containerEl = modalRoot.querySelector('.container-result') as HTMLElement | null;
-          if (containerEl) containerEl.appendChild(cards);
-          else modalRoot.appendChild(cards);
+          buildShareCard({ isBday: false, age: res.age, subtekst: notBdayMsg });
         } catch { /* ignore */ }
+
+        // Affiliate cards removed per request — no-op
 
         // Heading remains a static <h2> for semantics; avoid programmatic focus to prevent visual focus outline.
         const headingEl = modalRoot.querySelector('#result-heading') as HTMLElement | null;
