@@ -50,4 +50,4 @@
 - Default: geen logo in de gegenereerde share-image tenzij expliciet gewenst.
 - Gebruik inline stijlen voor off‑screen share-card om html2canvas-compatibiliteit te maximaliseren.
 - Keep it simple: compacte, snel leesbare 1:1 afbeeldingen zonder functionele UI-elementen.
->>>>>>> 0581c0c87746f6108f4f270638aa0f5631f7826f
+>>>>>>> 0581c0c87746f6108f4f270638aa0f5631f7826
