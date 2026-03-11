@@ -106,6 +106,7 @@ export type ShareCardOptions = {
   age: number | null;
   subtekst: string;
   isLeap?: boolean;
+  daysToNext?: number;
 };
 
 /**
@@ -161,13 +162,19 @@ export function buildShareCard(opts: ShareCardOptions): void {
     const textColor = '#1a1a1a';
     const mutedColor = 'rgba(0,0,0,0.55)';
 
+    // Prepare optional countdown line if provided (e.g. "Nog 143 dagen tot taart")
+    const countdownLine = (typeof (opts as any).daysToNext === 'number' && (opts as any).daysToNext > 0)
+      ? `<div style="font-size:18px;font-weight:700;color:${textColor};margin-top:8px;">Nog ${(opts as any).daysToNext} dagen tot je verjaardag</div>`
+      : '';
+
     el.innerHTML = `
       <div style="font-size:13px;font-weight:700;letter-spacing:1px;color:${mutedColor};align-self:flex-start;">benikvandaagjarig.nl</div>
 
       <div style="display:flex;flex-direction:column;align-items:center;gap:16px;max-width:420px;">
         <div style="font-size:16px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:${textColor};">${official}</div>
         <div style="font-size:46px;font-weight:900;line-height:1.1;color:${textColor};text-transform:uppercase;">${headline}</div>
-        <div style="font-size:18px;font-weight:600;color:${textColor};opacity:0.85;max-width:380px;">${subtekst}</div>
+        ${countdownLine}
+        <div style="font-size:18px;font-weight:600;color:${textColor};opacity:0.85;max-width:380px;margin-top:6px;">${subtekst}</div>
       </div>
 
       <div style="font-size:13px;font-weight:700;letter-spacing:1px;color:${mutedColor};align-self:flex-end;">benikvandaagjarig.nl</div>

@@ -474,6 +474,8 @@ function mountApp() {
     setTimeout(() => {
       const res = evaluateBirthday(day, month, year);
 
+      const days = daysUntilBirthday(day, month);
+
       if (res.leapYearMessage) {
         modalRoot.className = 'leap-year';
         const leapMsg = 'Jouw verjaardag (29 februari) bestaat alleen in schrikkeljaren!';
@@ -508,7 +510,7 @@ function mountApp() {
 
         // Build off-screen share card for image export (leap-year uses special styling)
         try {
-          buildShareCard({ isBday: false, age: res.age, subtekst: leapMsg, isLeap: true });
+          buildShareCard({ isBday: false, age: res.age, subtekst: leapMsg, isLeap: true, daysToNext: days });
         } catch { /* ignore */ }
 
         // Affiliate cards removed per request — no-op
@@ -577,6 +579,7 @@ function mountApp() {
             <h2 id="result-heading">😔 Nee, je bent niet jarig</h2>
             <p>Helaas! Vandaag is niet jouw verjaardag.</p>
             <p><strong>${notBdayMsg}</strong></p>
+            <p class="result-sub">Nog ${days} dagen tot je verjaardag</p>
             <div class="age-display">Je bent ${res.age ?? '-'} jaar oud</div>
             ${generateShareHtml(false)}
           </section>
@@ -592,7 +595,7 @@ function mountApp() {
 
         // Build off-screen share card for image export
         try {
-          buildShareCard({ isBday: false, age: res.age, subtekst: notBdayMsg });
+          buildShareCard({ isBday: false, age: res.age, subtekst: notBdayMsg, daysToNext: days });
         } catch { /* ignore */ }
 
         // Affiliate cards removed per request — no-op
