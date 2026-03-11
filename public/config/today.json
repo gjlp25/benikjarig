@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Jesse Schuurman",
+    "age": 28,
+    "image_url": "/logo.png"
+  },
+  {
+    "name": "Jodie Comer",
+    "age": 33,
+    "image_url": "/logo.png"
+  },
+  {
+    "name": "WillNE (Will Lenney)",
+    "age": 30,
+    "image_url": "/logo.png"
+  }
+]

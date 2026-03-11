@@ -114,6 +114,69 @@ async function loadContent(): Promise<void> {
 }
 
 /**
+ * Load and render a simple celebrity section from /config/today.json.
+ * - Always renders a visible container directly under the form with fallback text.
+ * - Populates the grid if data is available.
+ */
+async function loadCelebrities(): Promise<void> {
+  const app = qs('#app') as HTMLElement | null;
+  if (!app) return;
+
+  // Avoid duplicate
+  if (document.getElementById('celebrity-wrapper')) return;
+
+  // Create wrapper with fallback content
+  const wrapper = document.createElement('section');
+  wrapper.id = 'celebrity-wrapper';
+  wrapper.className = 'celebrity-card container';
+  wrapper.innerHTML = `
+    <h3 class="celebrity-title">Wie zijn er nog meer vandaag jarig?</h3>
+    <div id="celebrity-container" class="celebrity-grid" aria-live="polite">
+      <p class="muted">Laden...</p>
+    </div>
+  `;
+
+  // Insert after first .container (the form)
+  const firstContainer = app.querySelector('.container');
+  if (firstContainer && firstContainer.parentNode) {
+    firstContainer.parentNode.insertBefore(wrapper, firstContainer.nextSibling);
+  } else {
+    app.appendChild(wrapper);
+  }
+
+  const grid = wrapper.querySelector('#celebrity-container') as HTMLElement;
+
+  try {
+    const res = await fetch('/config/today.json');
+    if (!res.ok) {
+      grid.innerHTML = '<p class="muted">Geen gegevens beschikbaar voor vandaag.</p>';
+      return;
+    }
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      grid.innerHTML = '<p class="muted">Geen beroemdheden gevonden.</p>';
+      return;
+    }
+
+    grid.innerHTML = '';
+    data.slice(0, 8).forEach((p: any) => {
+      const item = document.createElement('div');
+      item.className = 'celebrity-item';
+      item.innerHTML = `
+        <img class="celebrity-img" src="${p.image_url || p.image || '/logo.png'}" alt="${p.name || ''}" />
+        <div>
+          <div class="celebrity-name">${p.name || ''}</div>
+          <div class="celebrity-age">${p.age ? (String(p.age).replace(/\\s*jaar$/,'') + ' jaar') : ''}</div>
+        </div>
+      `;
+      grid.appendChild(item);
+    });
+  } catch {
+    grid.innerHTML = '<p class="muted">Geen gegevens beschikbaar voor vandaag.</p>';
+  }
+}
+
+/**
  * Days until next occurrence of the given day/month.
  * Handles invalid dates (e.g. 29 Feb) by finding the next year where the date exists.
  */
@@ -553,5 +616,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadContent();
   initConsent({ container: qs('main') as HTMLElement });
   mountApp();
+  try { await loadCelebrities(); } catch { /* ignore */ }
   appendFooter();
 });

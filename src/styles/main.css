@@ -55,8 +55,9 @@ main {
 .container-root {
   width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 1rem;
 }
 
@@ -515,4 +516,73 @@ input:focus {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Celebrity section (from index2.html) */
+.celebrity-card {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
+  border-radius: 48px;
+  padding: 2.5rem 1.5rem;
+  margin-top: 1.5rem;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.celebrity-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.celebrity-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.celebrity-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  width: 120px;
+}
+
+.celebrity-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.celebrity-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.celebrity-age {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Small screens: make grid dense and images slightly smaller */
+@media (max-width: 480px) {
+  .celebrity-item { width: 90px; min-width: 90px; }
+  .celebrity-img { width: 56px; height: 56px; }
+  .celebrity-title { font-size: 1.1rem; margin-bottom: 0.75rem; }
 }

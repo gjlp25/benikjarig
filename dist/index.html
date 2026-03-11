@@ -5,25 +5,23 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Ben ik vandaag jarig?</title>
     <meta name="description" content="Ontdek of je vandaag jarig bent! Een leuke gimmick website om te checken of het jouw verjaardag is." />
+    <link rel="canonical" href="https://benikvandaagjarig.nl/" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
     <meta name="theme-color" content="#e8aeb7" />
 
-    <!-- Open Graph (static fallbacks + dynamic OG endpoint) -->
+    <!-- Open Graph (dynamic generator primary + static fallback) -->
     <meta property="og:title" content="Ben ik vandaag jarig?" />
     <meta property="og:description" content="Ontdek of je vandaag jarig bent!" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://benikvandaagjarig.nl" />
-    <!-- Static fallback images (public/) -->
-    <meta property="og:image" content="https://benikvandaagjarig.nl/og-default.png" />
-    <meta property="og:image:alt" content="Ben ik vandaag jarig? Check het nu." />
-    <!-- Dynamic generator as primary source when available -->
+    <!-- Primary dynamic OG image (API). Static fallback is og-default.svg -->
     <meta property="og:image" content="https://benikvandaagjarig.nl/api/og?status=not-birthday" />
-    <!-- Variant for 'is jarig' state -->
-    <meta property="og:image" content="https://benikvandaagjarig.nl/og-is-jarig.png" />
+    <meta property="og:image:alt" content="Ben ik vandaag jarig? Check het nu." />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Ben ik vandaag jarig?" />
     <meta name="twitter:description" content="Ontdek of je vandaag jarig bent!" />
-    <meta name="twitter:image" content="https://benikvandaagjarig.nl/og-default.png" />
+    <meta name="twitter:image" content="https://benikvandaagjarig.nl/api/og?status=not-birthday" />
 
     <!-- Security niceties -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -35,13 +33,9 @@
 
     <!-- Module entry -->
     
-<<<<<<< HEAD
-    <script type="module" crossorigin src="/assets/main-04442b02.js"></script>
-=======
-    <script type="module" crossorigin src="/assets/main-bae119e0.js"></script>
->>>>>>> 0581c0c87746f6108f4f270638aa0f5631f7826f
+    <script type="module" crossorigin src="/assets/main-d1785489.js"></script>
     <link rel="stylesheet" href="/assets/index-b32a9eee.css">
-    <link rel="stylesheet" href="/assets/main-0164fa1d.css">
+    <link rel="stylesheet" href="/assets/main-883c60d8.css">
   </head>
 
   <body>
@@ -51,5 +45,6 @@
              index.html in project root remains the canonical prototype/backup. -->
       </div>
     </main>
+    <script defer src="/_vercel/insights/script.js"></script>
   </body>
 </html>
