@@ -1,17 +1,17 @@
 [
   {
-    "name": "Jesse Schuurman",
-    "age": 28,
-    "image_url": "/jesse.png"
+    "name": "Emma Kok",
+    "age": 18,
+    "image_url": "emma.png"
   },
   {
-    "name": "Jodie Comer",
-    "age": 33,
-    "image_url": "/jodie.png"
+    "name": "Matthyas het Lam",
+    "age": 31,
+    "image_url": "matty.png"
   },
   {
-    "name": "WillNE (Will Lenney)",
-    "age": 30,
-    "image_url": "/will.png"
+    "name": "Miljuschka Witzenhausen",
+    "age": 41,
+    "image_url": "millie.png"
   }
 ]
