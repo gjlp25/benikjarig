@@ -164,7 +164,7 @@ export function buildShareCard(opts: ShareCardOptions): void {
 
     // Prepare optional countdown line if provided (e.g. "Nog 143 dagen tot taart")
     const countdownLine = (typeof (opts as any).daysToNext === 'number' && (opts as any).daysToNext > 0)
-      ? `<div style="font-size:18px;font-weight:700;color:${textColor};margin-top:8px;">Nog ${(opts as any).daysToNext} dagen tot je verjaardag</div>`
+      ? `<div style="font-size:18px;font-weight:700;color:${textColor};margin-top:8px;">Nog ${(opts as any).daysToNext} dagen tot mijn verjaardag</div>`
       : '';
 
     el.innerHTML = `
