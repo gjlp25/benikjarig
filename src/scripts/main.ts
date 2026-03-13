@@ -219,18 +219,8 @@ function buildForm() {
 
     <form id="birthdayForm">
       <div class="form-group">
-        <label for="day">Dag</label>
-        <input type="number" id="day" min="1" max="31" required aria-label="Geboortedag" />
-      </div>
-
-      <div class="form-group">
-        <label for="month">Maand</label>
-        <input type="number" id="month" min="1" max="12" required aria-label="Geboortemaand" />
-      </div>
-
-      <div class="form-group">
-        <label for="year">Jaar</label>
-        <input type="number" id="year" min="1900" required aria-label="Geboortejaar" />
+        <label for="birthdate">Geboortedatum</label>
+        <input type="date" id="birthdate" required aria-label="Geboortedatum" />
       </div>
 
       <button type="submit" class="btn" id="checkBtn">🎉 Check of ik jarig ben!</button>
@@ -291,9 +281,7 @@ function mountApp() {
 
   const form = qs('#birthdayForm') as HTMLFormElement;
   const checkBtn = qs('#checkBtn') as HTMLButtonElement;
-  const dayInput = qs('#day') as HTMLInputElement;
-  const monthInput = qs('#month') as HTMLInputElement;
-  const yearInput = qs('#year') as HTMLInputElement;
+  const birthdateInput = qs('#birthdate') as HTMLInputElement;
 
   // Modal root inserted inside <main> so the result appears directly after the form in DOM order
   let modalRoot = document.getElementById('modal-root') as HTMLElement | null;
@@ -306,28 +294,18 @@ function mountApp() {
     (host as HTMLElement).appendChild(modalRoot);
   }
 
-  // Set year constraints
-  const currentYear = new Date().getFullYear();
-  yearInput.max = String(currentYear);
+  // Set max selectable date to today to avoid future dates
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const maxDate = `${yyyy}-${mm}-${dd}`;
+  try {
+    if (birthdateInput) birthdateInput.max = maxDate;
+  } catch { /* ignore */ }
 
-  dayInput.focus();
-
-  // Update day max when month/year change
-  function updateDaysMax() {
-    const m = parseInt(monthInput.value) || 1;
-    const y = parseInt(yearInput.value) || currentYear;
-    const daysInMonth = new Date(y, m, 0).getDate();
-    dayInput.max = String(daysInMonth);
-    if (parseInt(dayInput.value || '0') > daysInMonth) {
-      dayInput.style.borderColor = '#ef4444';
-    } else {
-      dayInput.style.borderColor = '#e2e8f0';
-    }
-  }
-
-  on(monthInput, 'change', updateDaysMax);
-  on(yearInput, 'change', updateDaysMax);
-  on(dayInput, 'input', updateDaysMax);
+  // Focus the date input for faster entry
+  try { birthdateInput.focus(); } catch { /* ignore */ }
 
   // Keyboard navigation (Enter to next input)
   on(document, 'keydown', (ev: Event) => {
@@ -458,12 +436,18 @@ function mountApp() {
       if (_app) _app.removeAttribute('aria-hidden');
     } catch { /* ignore */ }
 
-    const day = parseInt(dayInput.value, 10);
-    const month = parseInt(monthInput.value, 10);
-    const year = parseInt(yearInput.value, 10);
+    const dateVal = (birthdateInput && birthdateInput.value) ? birthdateInput.value.trim() : '';
+    if (!dateVal) {
+      alert('Vul je geboortedatum in!');
+      return;
+    }
+    const parts = dateVal.split('-');
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
 
     if (!validateInput(day, month, year)) {
-      alert('Vul alle velden in met een geldige datum!');
+      alert('Vul een geldige geboortedatum in!');
       return;
     }
 
