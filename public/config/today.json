@@ -1,17 +1,18 @@
 [
   {
-    "name": "Emma Kok",
-    "age": 18,
-    "image_url": "emma.png"
+    "name": "Coco Gauff",
+    "age": 22,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Coco_Gauff_2022_US_Open_001.jpg/600px-Coco_Gauff_2022_US_Open_001.jpg"
   },
   {
-    "name": "Matthyas het Lam",
-    "age": 31,
-    "image_url": "matty.png"
+    "name": "Beomgyu",
+    "age": 25,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Choi_Beom-gyu_at_a_Dior_event_in_2025_02.jpg/600px-Choi_Beom-gyu_at_a_Dior_event_in_2025_02.jpg"
   },
   {
-    "name": "Miljuschka Witzenhausen",
-    "age": 41,
-    "image_url": "millie.png"
+    "name": "Tom Dearden",
+    "age": 25,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Tommy_Dearden.jpg/600px-Tommy_Dearden.jpg"
   }
+  
 ]
