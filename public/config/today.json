@@ -13,5 +13,20 @@
     "name": "Tom Dearden",
     "age": 25,
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Tommy_Dearden.jpg/600px-Tommy_Dearden.jpg"
+  },
+  {
+    "name": "Emma Kok",
+    "age": 18,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Ballonboeket_Folieballonnen_Rode_Harten_en_Wolken_Zangeres_Emma_Kok_ambassadrice_van_de_Stichting_Vrienden_van_het_Sophia_Erasmus_Sophia_Kinderziekenhuis_Rotterdam_%28cropped%29.jpg/330px-thumbnail.jpg"
+  },
+  {
+    "name": "DannyLux",
+    "age": 22,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/DannyLux_Performing_at_Syracuse_University.jpg/330px-DannyLux_Performing_at_Syracuse_University.jpg"
+  },
+  {
+    "name": "Andrea Brillantes",
+    "age": 23,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Andrea_Brillantes_2022.jpg/330px-Andrea_Brillantes_2022.jpg"
   }
 ]
