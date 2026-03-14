@@ -1,17 +1,17 @@
 [
   {
-    "name": "Coco Gauff",
-    "age": 22,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Coco_Gauff_2022_US_Open_001.jpg/600px-Coco_Gauff_2022_US_Open_001.jpg"
+    "name": "Abby Ryder Fortson",
+    "age": 18,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/AbbyRyderFortson.jpg/600px-AbbyRyderFortson.jpg"
   },
   {
-    "name": "Beomgyu",
+    "name": "Nico Mannion",
     "age": 25,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Choi_Beom-gyu_at_a_Dior_event_in_2025_02.jpg/600px-Choi_Beom-gyu_at_a_Dior_event_in_2025_02.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Nico_Mannion.jpg/600px-Nico_Mannion.jpg"
   },
   {
-    "name": "Tom Dearden",
-    "age": 25,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Tommy_Dearden.jpg/600px-Tommy_Dearden.jpg"
+    "name": "Jihoon",
+    "age": 26,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/20230805_TREASURE_%28%ED%8A%B8%EB%A0%88%EC%A0%80%29_%EC%A7%80%ED%9B%88.jpg/600px-20230805_TREASURE_%28%ED%8A%B8%EB%A0%88%EC%A0%80%29_%EC%A7%80%ED%9B%88.jpg"
   }
 ]
